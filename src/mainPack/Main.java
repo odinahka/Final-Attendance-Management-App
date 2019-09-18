@@ -6,12 +6,17 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -22,49 +27,58 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import models.BoxAndPane;
-import models.Tables;
-import models.Texts;
-import models.Validation;
-import reusable.Actions;
-import reusable.TableListener;
+import models.*;
 import storageUnit.Students;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class Main extends Application {
-    PreparedStatement ps;
-    ResultSet rs;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
     Connection conn;
     String ID;
     Scene loginScene, secondScene;
     private String gender;
-    VBox fields, options;
+    private VBox fields, options;
     //fields and labels setup
-    private TextField id, fn, ln, em, ph, on,sc;
+    private TextField id, fn, ln, em, ph, on,sc, pc;
     private PasswordField pw;
     private DatePicker dob;
     private RadioButton m,fm;
-    private String radioButtonLabel;
-    TableListener tl;
 
-    final ObservableList option = FXCollections.observableArrayList();
-    Actions ac;
+    TextField id1, fn1, ln1, em1, ph1, on1;
+    DatePicker dob1;
+    RadioButton m1,fm1;
+    Button save1, back;
+
+    private String radioButtonLabel;
+    private Label label2;
+    private MenuBar menuBar;
+    private Menu fileMenu, subMenu, toolBar, viewMenu, mode;
+    private MenuItem item1, exitMenu;
+    private CheckMenuItem firstSem,secondSem,check1,check2;
+    private RadioMenuItem mode1, mode2;
+    private ToggleGroup tGroup;
+    final ObservableList data = FXCollections.observableArrayList();
+    TableView<Students> tb;
 
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         BoxAndPane bp = new BoxAndPane();
+        fields = bp.vbox();
+        options = bp.vbox();
         BorderPane place = new BorderPane();
         Tables table = new Tables();
-         fields = bp.vbox();
-         options = bp.vbox();
         Texts texts = new Texts();
         Stage secondaryStage = new Stage();
         Stage tertiaryStage = new Stage();
@@ -229,13 +243,14 @@ public class Main extends Application {
             //Stage and scene setup
             BorderPane container = new BorderPane();
             secondaryStage.hide();
-            Scene levelThree = new Scene(container,1000,600);
+            Scene levelThree = new Scene(container,1200,700);
             tertiaryStage.setScene(levelThree);
             tertiaryStage.show();
+            MenuBar menuBar = menu();
 
             //table view and scrollpane setup
-            TableView<Students> tb = table.studentsTable(); //creating for students with the required attributes
-            ScrollPane sp = bp.scrollpane(600,600, tb); //adding the table in a scrollpane
+            tb = table.studentsTable(); //creating for students with the required attributes
+            ScrollPane sp = bp.scrollpane(700,600, tb); //adding the table in a scrollpane
 
 
             sc = texts.textField(200,15, "search");
@@ -243,12 +258,15 @@ public class Main extends Application {
             id = texts.textField(200,15,"ID");
             fn = texts.textField(200,15,"First Name");
             ln = texts.textField(200,15,"Last Name");
+            on = texts.textField(200,15,"Other Name");
             em = texts.textField(200,15,"Email");
             ph = texts.textField(200,15,"Phone Number");
-            on = texts.textField(200,15,"Username");
             dob = texts.datePicker(200, "Date of Birth");
+            pc = texts.textField(200,15,"Registration Number");
+            pc.setEditable(false);
             ToggleGroup gender = new ToggleGroup();
             m = texts.radioButton("Male");
+            refreshTable();
             m.setOnAction(male ->
             {
                 m.setToggleGroup(gender);
@@ -260,30 +278,69 @@ public class Main extends Application {
                 fm.setToggleGroup(gender);
             });
 
+            label2 = texts.label("Edit Student Details");
+            id1 = texts.textField(200,15,"ID");
+            fn1 = texts.textField(200,15,"First Name");
+            ln1 = texts.textField(200,15,"Last Name");
+            on1 = texts.textField(200,15,"Other Name");
+            em1 = texts.textField(200,15,"Email");
+            ph1 = texts.textField(200,15,"Phone Number");
+            dob1 = texts.datePicker(200, "Date of Birth");
+            ToggleGroup gender1 = new ToggleGroup();
+            m1 = texts.radioButton("Male");
+            refreshTable();
+            m1.setOnAction(male ->
+            {
+                m1.setToggleGroup(gender1);
+                radioButtonLabel = m1.getText();
+            });
+            fm1 = texts.radioButton("Female");
+            fm1.setOnAction(female ->
+            {
+                fm1.setToggleGroup(gender1);
+            });
+
+
+            tableMove();
+            tableClick();
+
             Button save = bp.button(50,10,"Save");
             save.setOnAction(sv ->
             {
-                validate();
-                DBQuery.query(id, fn, ln, on,em, dob,radioButtonLabel,ph);
-                clearFields();
+               if(validate()) {
+                   DBQuery.query(id, fn, ln, on, em, dob, radioButtonLabel, ph);
+                   clearFields();
+                   refreshTable();
+               }
             });
             Button delete = bp.button(50,10,"Delete");
             delete.setOnAction(de ->
             {
-                deleteStudent(tb);
-                tb.setItems(refreshTable());
+                delete();
             });
-            Button load = bp.button(50,10,"Load");
-            load.setOnAction( ld -> tb.setItems(refreshTable()));
+            Button load = bp.button(50,10,"Edit");
+            edit();
+            load.setOnAction( ld -> {
+
+                editWindow();
+            });
+            tableFilter();
 
             HBox hBox = new HBox(10);
             hBox.setPadding(new Insets(10,10,10,10));
             hBox.setSpacing(15);
             hBox.getChildren().addAll(save, delete, load);
-            fields.getChildren().addAll(sc,label1,id,fn,ln,em,on,ph,dob,m,fm,hBox); //adding the contents of the fields and labels to a box
+
+            HBox tableBox = new HBox(10);
+            tableBox.setPadding(new Insets (10,200,10,10));
+            tableBox.setAlignment(Pos.CENTER_RIGHT);
+            tableBox.getChildren().add(pc);
+            fields.getChildren().addAll(sc,label1,id,fn,ln,on,em,ph,dob,m,fm,hBox); //adding the contents of the fields and labels to a box
 
             container.setLeft(fields); // setting the box at the left position on the border pane
             container.setRight(sp); //setting the scroll pane and table on the right position on the border pane
+            container.setBottom(tableBox);
+            container.setTop(menuBar);
         });
 
 
@@ -308,6 +365,14 @@ public class Main extends Application {
         else
             return false;
     }
+    Boolean validate2 ()
+    {
+        Validation vb = new Validation();
+        if(vb.validateID(id1) & vb.validateFirstName(fn1)&vb.validateLastName(ln1)&vb.validateEmail(em1)&vb.validatePhoneNumber(ph1)& vb.validateField(on1,dob1,m1,fm1))
+            return true;
+        else
+            return false;
+    }
 
     public void clearFields()
     {
@@ -317,18 +382,17 @@ public class Main extends Application {
         em.clear();
         ph.clear();
         on.clear();
+        sc.clear();
         dob.setValue(null);
         dob.getEditor().setText(null);
         m.setSelected(false);
         fm.setSelected(false);
     }
 
-    public ObservableList<Students> refreshTable()
+    public void refreshTable()
     {
-        ObservableList<Students> data = FXCollections.observableArrayList();
         try
         {
-            conn = DBconnection.Dbconnect();
             data.clear();
             String query = "select * from YearThreeStudents";
             ps = conn.prepareStatement(query);
@@ -339,11 +403,13 @@ public class Main extends Application {
                                 rs.getString("RegdNumber"),
                                 rs.getString("FirstName"),
                                 rs.getString("LastName"),
-                                rs.getString("OtherName"),
+                                rs.getString("Othername"),
                                 rs.getString("Email"),
                                 rs.getString("PhoneNumber"),
                                 rs.getString("Gender"))
                 );
+                tb.setItems(data);
+
             }
             ps.close();
             rs.close();
@@ -351,49 +417,289 @@ public class Main extends Application {
         {
             System.err.println(exce);
         }
-        return data;
     }
-    public void deleteStudent (TableView<Students> table)
+    void tableFilter()
     {
-        table.setOnKeyReleased( e->
+        FilteredList<Students> filteredData = new FilteredList<>(data, e -> true);
+        sc.setOnKeyReleased( e-> {
+            sc.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredData.setPredicate((Predicate<? super  Students>) students -> {
+                    if(newValue == null || newValue.isEmpty())
+                    {
+                        return true;
+                    }
+                    String lowercaseFilter = newValue.toLowerCase();
+                    if(students.getID().contains(newValue))
+                    {
+                        return true;
+                    }
+                    else if(students.getFirstName().toLowerCase().contains(lowercaseFilter))
+                    {
+                        return true;
+                    }
+                    else if(students.getLastName().toLowerCase().contains(lowercaseFilter))
+                    {
+                        return true;
+                    }
+
+                    return false;
+                });
+            });
+
+            SortedList<Students> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(tb.comparatorProperty());
+            tb.setItems(sortedData);
+        });
+    }
+    public void tableMove ()
+    {
+        tb.setOnKeyReleased( e->
         {
-            if(e.getCode() == KeyCode.UP || e.getCode() == KeyCode.DOWN)
+            if(e.getCode() == KeyCode.UP || e.getCode() == KeyCode.DOWN || e.getCode() == KeyCode.LEFT)
             {
                 try {
-                    Students students = (Students) table.getSelectionModel().getSelectedItem();
-                    String query = "select * from YearThreeStudents where RegdNumber = ?";
+                    Students students = (Students) tb.getSelectionModel().getSelectedItem();
+                    clearFields();
+                    String query = "select * from yearthreestudents where RegdNumber = ?";
                     ps = conn.prepareStatement(query);
                     ps.setString(1, students.getID());
                     rs = ps.executeQuery();
 
-                    while (rs.next()) {
-                        ID = rs.getString("RegdNumber");
+                    while(rs.next())
+                    {
+                        pc.setText(rs.getString("RegdNumber"));
 
                     }
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Confirmation Dialog");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Are you sure?");
-                    Optional<ButtonType> option = alert.showAndWait();
-                    if (option.get() == ButtonType.OK) {
-                        try {
-                            String q = "delete from YearThreeStudents where RegdNumber = ?";
-                            ps = conn.prepareStatement(q);
-                            ps.setString(1, ID);
-                            ps.executeUpdate();
-                        } catch (SQLException exc) {
-                            System.err.println(exc);
+                    ps.close();
+                    rs.close();
+                }
+                catch(SQLException excc)
+                {
+                    System.out.print(excc);
+                }
+            }
+        });
+    }
+    void tableClick()
+    {
+        tb.setOnMouseClicked(e ->
+        {
+            try {
+                Students students = (Students) tb.getSelectionModel().getSelectedItem();
+                clearFields();
+                String query = "select * from yearthreestudents where RegdNumber = ?";
+                ps = conn.prepareStatement(query);
+                ps.setString(1, students.getID());
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    pc.setText(rs.getString("RegdNumber"));
+                }
+                ps.close();
+                rs.close();
+            } catch (SQLException excc) {
+                System.out.print(excc);
+            }
+        });
+    }
+
+    void delete()
+    {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get() == ButtonType.OK) {
+                try {
+                    String query = "delete from yearthreestudents where regdnumber = ?";
+                    ps = conn.prepareStatement(query);
+                    ps.setString(1, pc.getText());
+                    ps.executeUpdate();
+
+                    ps.close();
+                } catch (SQLException exc) {
+                    System.err.println(exc);
+                }
+            }
+            clearFields();
+            refreshTable();
+    }
+    void edit()
+    {
+        tb.setOnKeyReleased( e->
+        {
+            if(e.getCode() == KeyCode.UP || e.getCode() == KeyCode.DOWN)
+            {
+                try {
+                    Students students = (Students) tb.getSelectionModel().getSelectedItem();
+                    String query = "select * from yearthreestudents where regdnumber = ?";
+                    ps = conn.prepareStatement(query);
+                    ps.setString(1, students.getID());
+                    rs = ps.executeQuery();
+
+                    while(rs.next())
+                    {
+                        pc.setText(rs.getString("RegdNumber"));
+                        id1.setText(rs.getString("RegdNumber"));
+                        fn1.setText(rs.getString("FirstName"));
+                        ln1.setText(rs.getString("LastName"));
+                        on1.setText(rs.getString("OtherName"));
+                        ph1.setText(rs.getString("PhoneNumber"));
+                        em1.setText(rs.getString("Email"));
+                        ((TextField)dob1.getEditor()).setText(rs.getString("DOB"));
+
+                        if( null != rs.getString("Gender"))
+                            switch(rs.getString("Gender"))
+                            {
+                                case "Male": m1.setSelected(true);
+                                    break;
+                                case "Female": fm1.setSelected(true);
+                                    break;
+                            }
+                        else
+                        {
+                            m.setSelected(false);
+                            fm.setSelected(false);
                         }
                     }
                     ps.close();
                     rs.close();
                 }
-                catch(SQLException sqlException)
+                catch(SQLException excc)
                 {
-                    System.out.println("Exception: "+ sqlException);
+                    System.out.print(excc);
                 }
             }
         });
+
+        tb.setOnMouseClicked(e ->
+        {
+            try {
+                Students students = (Students) tb.getSelectionModel().getSelectedItem();
+                    String query = "select * from yearthreestudents where regdnumber = ?";
+                    ps = conn.prepareStatement(query);
+                    ps.setString(1, students.getID());
+                    rs = ps.executeQuery();
+
+                    while(rs.next())
+                    {
+                        id1.setText(rs.getString("RegdNumber"));
+                        fn1.setText(rs.getString("FirstName"));
+                        ln1.setText(rs.getString("LastName"));
+                        on1.setText(rs.getString("OtherName"));
+                        ph1.setText(rs.getString("PhoneNumber"));
+                        em1.setText(rs.getString("Email"));
+                        ((TextField)dob1.getEditor()).setText(rs.getString("DOB"));
+
+                        if( null != rs.getString("Gender"))
+                            switch(rs.getString("Gender"))
+                            {
+                                case "Male": m1.setSelected(true);
+                                    break;
+                                case "Female": fm1.setSelected(true);
+                                    break;
+                            }
+                        else
+                        {
+                            m1.setSelected(false);
+                            fm1.setSelected(false);
+                        }
+                    }
+                    ps.close();
+                    rs.close();
+                }
+                catch(SQLException excc)
+                {
+                    System.out.print(excc);
+                }
+        });
+    }
+
+    public MenuBar menu() {
+         menuBar =new MenuBar();
+
+        fileMenu = new Menu("File");
+        subMenu = new Menu("Open Courses");
+        item1 = new MenuItem("Edit Students...");
+        item1.setOnAction(e -> editWindow());
+
+
+        firstSem = new CheckMenuItem("First Semester");
+        secondSem = new CheckMenuItem("First Semester");
+        exitMenu = new MenuItem("Exit");
+        subMenu.getItems().addAll(firstSem, secondSem, exitMenu);
+
+
+        exitMenu.setOnAction(e -> Platform.exit());
+        fileMenu.getItems().addAll(item1, subMenu, new SeparatorMenuItem(), exitMenu);
+        //add view menu
+        viewMenu = new Menu("View");
+        check1 = new CheckMenuItem("Editor");
+        check1.setSelected(true);
+        check2 = new CheckMenuItem("Line Number");
+        check2.setSelected(true);
+        toolBar = new Menu("Toolbar");
+        toolBar.getItems().addAll(new CheckMenuItem ("File"),
+                new CheckMenuItem("Run"),
+                new CheckMenuItem("Debug"));
+        viewMenu.getItems().addAll(check1, check2, new SeparatorMenuItem(),toolBar);
+
+        //mode menu
+        mode = new Menu("Mode");
+        tGroup = new ToggleGroup();
+        mode1 = new RadioMenuItem("Desktop");
+        mode1.setToggleGroup(tGroup);
+        mode2 = new RadioMenuItem("Tablet");
+        mode2.setToggleGroup(tGroup);
+        mode2.setSelected(true);
+        mode.getItems().addAll(mode1,mode2);
+        menuBar.getMenus().addAll(fileMenu,viewMenu,mode);
+
+        return menuBar;
+    }
+
+    void editWindow()
+    {
+
+        Stage window = new Stage();
+        BoxAndPane bnp = new BoxAndPane();
+
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setWidth(300);
+        window.setHeight(550);
+
+        save1 = bnp.button(50,10,"Update");
+        save1.setOnAction(sv ->
+        {
+            if(validate2()) {
+                DBQuery.updateQuery(id1, fn1, ln1, on1, em1, dob1, radioButtonLabel, ph1);
+                clearFields();
+                refreshTable();
+                window.close();
+            }
+        });
+        back = bnp.button(50,10,"Back");
+        back.setOnAction( ld -> window.close());
+
+        HBox hBox = new HBox(10);
+        hBox.setPadding(new Insets(10,10,10,10));
+        hBox.setSpacing(15);
+        hBox.getChildren().addAll(save1, back);
+
+
+        VBox layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(10,10,10,10));
+        layout.setSpacing(20);
+        layout.getChildren().addAll(label2,id1,fn1, ln1, on1, em1, ph1, dob1, m1, fm1, hBox);
+        Scene scene = new Scene(layout);
+
+        window.setScene(scene);
+        window.show();
+
+
+
     }
 
     public static void main(String[] args) {
