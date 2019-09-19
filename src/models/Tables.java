@@ -88,4 +88,47 @@ public class Tables {
         table.setTableMenuButtonVisible(true);
         return table;
     }
+
+    public TableView CoursesTable()
+    {
+        TableView<CourseDetails> table = new TableView<>();
+
+        TableColumn<CourseDetails, Integer> column1 = new TableColumn<>("ID");
+        column1.setMinWidth(20);
+        column1.setCellValueFactory(new PropertyValueFactory<>("ID"));
+
+        TableColumn<CourseDetails, String> column2  = new TableColumn<>("Regd Number");
+        column2.setMinWidth(80);
+        column2.setCellValueFactory(new PropertyValueFactory<>("regdNumber"));
+
+        TableColumn <CourseDetails, String> column3 = new TableColumn<>("First Name");
+        column3.setMinWidth(80);
+        column3.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+
+        TableColumn <CourseDetails, String> column4 = new TableColumn<>("Last Name");
+        column4.setMinWidth(80);
+        column4.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+
+        TableColumn <CourseDetails, String> column5 = new TableColumn<>("Other Name");
+        column5.setMinWidth(80);
+        column5.setCellValueFactory(new PropertyValueFactory<>("otherName"));
+
+        TableColumn <CourseDetails, Integer> column6 = new TableColumn<>("Lecture Number");
+        column6.setMinWidth(150);
+        column6.setCellValueFactory(new PropertyValueFactory<>("lectureNumber"));
+
+
+        TableColumn <CourseDetails, Integer> column7 = new TableColumn<>("Lectures Attended");
+        column7.setMinWidth(50);
+        column7.setCellValueFactory(new PropertyValueFactory<>("lecturesAttended"));
+
+        TableColumn <CourseDetails, Integer> column8 = new TableColumn<>("Attendance Percentage");
+        column8.setMinWidth(50);
+        column8.setCellValueFactory(new PropertyValueFactory<>("attendancePecentage"));
+
+
+        table.getColumns().addAll(column1, column2, column3, column4,column5, column6, column7, column8);
+        table.setTableMenuButtonVisible(true);
+        return table;
+    }
 }

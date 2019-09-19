@@ -2,6 +2,7 @@ package mainPack;
 
 import DatabaseTransaction.DBQuery;
 import DatabaseTransaction.DBconnection;
+import com.sun.javafx.scene.control.skin.ContextMenuContent;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -15,6 +16,13 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -31,8 +39,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.*;
+import scenes.YearThreeCourses;
 import storageUnit.Students;
 
+import java.awt.*;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,9 +73,9 @@ public class Main extends Application {
     private String radioButtonLabel;
     private Label label2;
     private MenuBar menuBar;
-    private Menu fileMenu, subMenu, toolBar, viewMenu, mode;
+    private Menu fileMenu, subMenu, toolBar, viewMenu, mode,firstSem,secondSem;
     private MenuItem item1, exitMenu;
-    private CheckMenuItem firstSem,secondSem,check1,check2;
+    private CheckMenuItem check1,check2;
     private RadioMenuItem mode1, mode2;
     private ToggleGroup tGroup;
     final ObservableList data = FXCollections.observableArrayList();
@@ -617,6 +627,7 @@ public class Main extends Application {
     }
 
     public MenuBar menu() {
+        YearThreeCourses ytc = new YearThreeCourses();
          menuBar =new MenuBar();
 
         fileMenu = new Menu("File");
@@ -625,8 +636,10 @@ public class Main extends Application {
         item1.setOnAction(e -> editWindow());
 
 
-        firstSem = new CheckMenuItem("First Semester");
-        secondSem = new CheckMenuItem("First Semester");
+        firstSem = new Menu("First Semester");
+        secondSem = new Menu("Second Semester");
+        firstSem.setOnAction(e -> ytc.firstSemester());
+
         exitMenu = new MenuItem("Exit");
         subMenu.getItems().addAll(firstSem, secondSem, exitMenu);
 
@@ -697,8 +710,6 @@ public class Main extends Application {
 
         window.setScene(scene);
         window.show();
-
-
 
     }
 

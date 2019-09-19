@@ -44,6 +44,7 @@ public class BoxAndPane {
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         sp.setFitToHeight(true);
+        sp.setFitToWidth(true);
         sp.setHmax(3);
         sp.setHvalue(0);
         return sp;

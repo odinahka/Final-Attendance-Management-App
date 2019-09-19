@@ -50,7 +50,7 @@ public class DBQuery {
         PreparedStatement ps;
         Connection conn = DBconnection.Dbconnect(); // checkConnection();;
         try {
-            String query = "update yearthreestudents set RegdNumber=?, FirstName=?, LastName=?, UserName=?, Email=?, DOB=?, Gender=?, PhoneNumber=? where ID ='"+id.getText()+"' ";
+            String query = "update yearthreestudents set RegdNumber=?, FirstName=?, LastName=?, OtherName=?, Email=?, DOB=?, Gender=?, PhoneNumber=? where ID ='"+id.getText()+"' ";
             ps = conn.prepareStatement(query);
             ps.setString(1, id.getText());
             ps.setString(2, firstName.getText());
