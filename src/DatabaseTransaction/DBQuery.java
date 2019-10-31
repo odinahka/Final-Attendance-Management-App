@@ -14,12 +14,12 @@ import java.sql.PreparedStatement;
  * Created by odinahka on 9/14/2019.
  */
 public class DBQuery {
-    public static void query(TextField id, TextField firstName, TextField lastName,TextField otherName, TextField email, DatePicker date, String radioButtonLabel, TextField phoneNo )
+    public static void query(String studentsTable, TextField id, TextField firstName, TextField lastName,TextField otherName, TextField email, DatePicker date, String radioButtonLabel, TextField phoneNo )
     {
         PreparedStatement ps;
         Connection conn = DBconnection.Dbconnect(); // checkConnection();;
         try {
-            String query = "INSERT INTO YearThreeStudents (RegdNumber, FirstName, LastName, OtherName, Email, DOB, Gender, PhoneNumber) VALUES (?,?,?,?,?,?,?,?)";
+            String query = "INSERT INTO " +studentsTable+ " (RegdNumber, FirstName, LastName, OtherName, Email, DOB, Gender, PhoneNumber) VALUES (?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(query);
             ps.setString(1, id.getText());
             ps.setString(2, firstName.getText());
@@ -45,12 +45,12 @@ public class DBQuery {
         }
     }
 
-    public static void updateQuery(TextField id, TextField firstName, TextField lastName,TextField otherName, TextField email, DatePicker date, String radioButtonLabel, TextField phoneNo )
+    public static void updateQuery(String studentsTable, TextField id, TextField firstName, TextField lastName,TextField otherName, TextField email, DatePicker date, String radioButtonLabel, TextField phoneNo )
     {
         PreparedStatement ps;
         Connection conn = DBconnection.Dbconnect(); // checkConnection();;
         try {
-            String query = "update yearthreestudents set RegdNumber=?, FirstName=?, LastName=?, OtherName=?, Email=?, DOB=?, Gender=?, PhoneNumber=? where ID ='"+id.getText()+"' ";
+            String query = "update " + studentsTable+ " set RegdNumber=?, FirstName=?, LastName=?, OtherName=?, Email=?, DOB=?, Gender=?, PhoneNumber=? where RegdNumber ='"+id.getText()+"'";
             ps = conn.prepareStatement(query);
             ps.setString(1, id.getText());
             ps.setString(2, firstName.getText());

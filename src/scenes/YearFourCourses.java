@@ -26,7 +26,7 @@ import java.sql.ResultSet;
 /**
  * Created by odinahka on 9/19/2019.
  */
-public class YearThreeCourses {
+public class YearFourCourses {
 
     Connection conn;
     PreparedStatement ps;
@@ -52,65 +52,14 @@ public class YearThreeCourses {
 
         ListView listView = new ListView();
         courses = FXCollections.observableArrayList(
-                "ELE 311 - Circuit Theory II",
-                "ELE 341 - Electromagnetic Fields and Waves",
-                "ELE 343 - Electromech Devices and Machine I",
-                "ELE 353 - Power Systems",
-                "ECE 321 - Telecommunication I",
-                "ECE 323 - Electronic Devices & Circuits I",
-                "ECE 332 - Signals Analysis and Systems",
-                "ECE 333 - Digital System Design I",
-                "FEG 303 - Engineering Mathematics III"
-        );
-        listView.setItems(courses);
-        listView.setOnKeyPressed(e -> {
-                    if (e.getCode() == KeyCode.ENTER) {
-                        String databaseName = "" ;
-                       for(String m : courses)
-                       {
-                           if(m == (String)listView.getSelectionModel().getSelectedItem()) {
-                               m = m.replaceAll("\\s", "");
-                               databaseName = m.substring(7);
-                               System.out.println(databaseName);
-                           }
-                       }
-
-                       courseScene(databaseName);
-                    }
-                }
-        );
-        vbox.getChildren().add(listView);
-        Scene scene = new Scene(vbox);
-        window.setScene(scene);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.show();
-    }
-
-    public void secondSemester() {
-
-        conn = DBconnection.Dbconnect();
-        Stage window = new Stage();
-
-        VBox vbox = new VBox(10);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(10));
-        vbox.setSpacing(10);
-
-        window.setWidth(300);
-        window.setHeight(500);
-
-        ListView listView = new ListView();
-        courses = FXCollections.observableArrayList(
-                "ECE 322 - Telecommunication II",
-                "ECE 326 - Power Electronics",
-                "ELE 344 - Electromech Devices and Machine II",
-                "ECE 328 - Electronic ",
-                "ECE 328 - Electronic Devices and Circuits II",
-                "ECE 334 - Digital System Design II",
-                "ELE 312 - Circuit Theory III",
-                "ELE 342 - Electrodynamics",
-                "ELE 372 - Instrumentation and Measurement I",
-                "ELE 382 - Feedback and Control Engineering"
+                "FEG 404 - Engineering Mathematics IV",
+                "CVE 423 - Engineering Contracts and Specification",
+                "ELE 403 - Circuit Theory IV",
+                "ELE 473 - Instrumentation and Measurement II",
+                "ECE 405 - Microprocessors and Computers",
+                "ECE 421 - Assembly Language Programming",
+                "ECE 427 - Advanced Circuit Techniques",
+                "ECE 431 - Fundamental of Digital Communication"
         );
         listView.setItems(courses);
         listView.setOnKeyPressed(e -> {
