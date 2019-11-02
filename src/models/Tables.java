@@ -54,7 +54,7 @@ public class Tables {
     {
         TableView<Students> table = new TableView<>();
 
-        TableColumn<Students, String> column1 = new TableColumn<>("ID");
+        TableColumn<Students, String> column1 = new TableColumn<>("Regd Number");
         column1.setMinWidth(20);
         column1.setCellValueFactory(new PropertyValueFactory<>("ID"));
 
@@ -62,13 +62,13 @@ public class Tables {
         column2.setMinWidth(80);
         column2.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 
-        TableColumn <Students, String> column3 = new TableColumn<>("Last Name");
+        TableColumn <Students, String> column3 = new TableColumn<>("Other Name");
         column3.setMinWidth(80);
-        column3.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        column3.setCellValueFactory(new PropertyValueFactory<>("otherName"));
 
-        TableColumn <Students, String> column4 = new TableColumn<>("Other Name");
+        TableColumn <Students, String> column4 = new TableColumn<>("Last Name");
         column4.setMinWidth(80);
-        column4.setCellValueFactory(new PropertyValueFactory<>("otherName"));
+        column4.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 
         TableColumn <Students, String> column5 = new TableColumn<>("Email");
         column5.setMinWidth(150);
@@ -93,10 +93,6 @@ public class Tables {
     {
         TableView<CourseDetails> table = new TableView<>();
 
-        TableColumn<CourseDetails, Integer> column1 = new TableColumn<>("ID");
-        column1.setMinWidth(20);
-        column1.setCellValueFactory(new PropertyValueFactory<>("ID"));
-
         TableColumn<CourseDetails, String> column2  = new TableColumn<>("Regd Number");
         column2.setMinWidth(80);
         column2.setCellValueFactory(new PropertyValueFactory<>("regdNumber"));
@@ -105,13 +101,13 @@ public class Tables {
         column3.setMinWidth(80);
         column3.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 
-        TableColumn <CourseDetails, String> column4 = new TableColumn<>("Last Name");
+        TableColumn <CourseDetails, String> column4 = new TableColumn<>("Other Name");
         column4.setMinWidth(80);
-        column4.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        column4.setCellValueFactory(new PropertyValueFactory<>("otherName"));
 
-        TableColumn <CourseDetails, String> column5 = new TableColumn<>("Other Name");
+        TableColumn <CourseDetails, String> column5 = new TableColumn<>("Last Name");
         column5.setMinWidth(80);
-        column5.setCellValueFactory(new PropertyValueFactory<>("otherName"));
+        column5.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 
         TableColumn <CourseDetails, Integer> column6 = new TableColumn<>("Lecture Number");
         column6.setMinWidth(150);
@@ -127,7 +123,7 @@ public class Tables {
         column8.setCellValueFactory(new PropertyValueFactory<>("attendancePecentage"));
 
 
-        table.getColumns().addAll(column1, column2, column3, column4,column5, column6, column7, column8);
+        table.getColumns().addAll(column2, column3, column4,column5, column6, column7, column8);
         table.setTableMenuButtonVisible(true);
         return table;
     }

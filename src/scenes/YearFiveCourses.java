@@ -156,11 +156,10 @@ public class YearFiveCourses {
             while(rs.next()){
                 data.add(
                         new CourseDetails(
-                                rs.getInt("ID"),
                                 rs.getString("RegdNumber"),
                                 rs.getString("FirstName"),
+                                rs.getString("OtherName"),
                                 rs.getString("LastName"),
-                                rs.getString("Othername"),
                                 rs.getInt("LectureNumber"),
                                 rs.getInt("LecturesAttended"),
                                 rs.getInt("AttendancePercentage")
@@ -199,6 +198,7 @@ public class YearFiveCourses {
         MenuItem addStudent;
         generateReport.getItems().addAll(authenticationReport, printableReport);
         addStudent = new MenuItem("Add Students");
+        addStudent.setOnAction(e -> addStudentScene());
         others.getItems().addAll(addStudent,new SeparatorMenuItem(),generateReport);
 
         menuBar.getMenus().addAll(update, others);
@@ -207,6 +207,25 @@ public class YearFiveCourses {
         window.setScene(scene);
         window.setMinWidth(850);
         window.setMinHeight(700);
+        window.show();
+    }
+    void addStudentScene(){
+        VBox vbox = new VBox();
+        Stage window = new Stage();
+        Texts texts = new Texts();
+        fn = texts.textField(200,15,"First Name");
+        on = texts.textField(200,15,"Other Name");
+        ln = texts.textField(200,15,"Last Name");
+        rn =texts.textField(200,15,"Regd Number");
+        fn.setEditable(false);
+        on.setEditable(false);
+        ln.setEditable(false);
+        vbox.setPadding(new Insets(50));
+        vbox.setSpacing(20);
+        vbox.getChildren().addAll(rn,fn,on,ln);
+        window.initModality(Modality.APPLICATION_MODAL);
+        Scene scene = new Scene(vbox, 300,300);
+        window.setScene(scene);
         window.show();
     }
 

@@ -14,11 +14,11 @@ public class Students {
     private final SimpleStringProperty phoneNo;
     private final SimpleStringProperty gender;
 
-    public Students(String ID, String fName, String lName, String email, String otherName, String phoneNo, String gender) {
+    public Students(String ID, String fName, String oName, String lName,String email, String phoneNo, String gender) {
         this.ID = new SimpleStringProperty(ID);
         firstName = new SimpleStringProperty(fName);
         lastName = new SimpleStringProperty(lName);
-        this.otherName = new SimpleStringProperty(otherName);
+        this.otherName = new SimpleStringProperty(oName);
         this.email = new SimpleStringProperty(email);
         this.gender = new SimpleStringProperty(gender);
         this.phoneNo = new SimpleStringProperty(phoneNo);

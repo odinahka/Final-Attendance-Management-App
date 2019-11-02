@@ -7,17 +7,15 @@ import javafx.beans.property.SimpleStringProperty;
  * Created by odinahka on 9/19/2019.
  */
 public class CourseDetails {
-    private final SimpleIntegerProperty ID;
     private final SimpleStringProperty regdNumber;
     private final SimpleStringProperty firstName;
-    private final SimpleStringProperty lastName;
     private final SimpleStringProperty otherName;
+    private final SimpleStringProperty lastName;
     private final SimpleIntegerProperty lectureNumber;
     private final SimpleIntegerProperty NumberAttended;
     private final SimpleIntegerProperty AttendancePercentage;
 
-    public CourseDetails(int ID,String rNumber, String fName, String lName, String oName, int lNumber, int nAttended, int aPercentage) {
-        this.ID = new SimpleIntegerProperty(ID);
+    public CourseDetails(String rNumber, String fName, String oName, String lName, int lNumber, int nAttended, int aPercentage) {
         this.regdNumber = new SimpleStringProperty(rNumber);
         firstName = new SimpleStringProperty(fName);
         lastName = new SimpleStringProperty(lName);
@@ -26,18 +24,6 @@ public class CourseDetails {
         this.lectureNumber = new SimpleIntegerProperty(lNumber);
         this.AttendancePercentage = new SimpleIntegerProperty(aPercentage);
 
-    }
-
-    public int getID() {
-        return ID.get();
-    }
-
-    public SimpleIntegerProperty IDProperty() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID.set(ID);
     }
 
     public String getRegdNumber() {

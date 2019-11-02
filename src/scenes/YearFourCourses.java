@@ -111,11 +111,10 @@ public class YearFourCourses {
             while(rs.next()){
                 data.add(
                         new CourseDetails(
-                                rs.getInt("ID"),
                                 rs.getString("RegdNumber"),
                                 rs.getString("FirstName"),
+                                rs.getString("OtherName"),
                                 rs.getString("LastName"),
-                                rs.getString("Othername"),
                                 rs.getInt("LectureNumber"),
                                 rs.getInt("LecturesAttended"),
                                 rs.getInt("AttendancePercentage")

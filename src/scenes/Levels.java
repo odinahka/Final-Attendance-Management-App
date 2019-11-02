@@ -154,7 +154,7 @@ public class Levels {
         save.setOnAction(sv ->
         {
             if(validate()) {
-                DBQuery.query(sTable,id, fn, ln, on, em, dob, radioButtonLabel, ph);
+                DBQuery.query(sTable,id, fn, on, ln, em, dob, radioButtonLabel, ph);
                 clearFields();
                 refreshTable(sTable);
             }
@@ -181,7 +181,7 @@ public class Levels {
         tableBox.setPadding(new Insets (10,200,10,10));
         tableBox.setAlignment(Pos.CENTER_RIGHT);
         tableBox.getChildren().add(pc);
-        fields.getChildren().addAll(sc,label1,id,fn,ln,on,em,ph,dob,m,fm,hBox); //adding the contents of the fields and labels to a box
+        fields.getChildren().addAll(sc,label1,id,fn,on,ln,em,ph,dob,m,fm,hBox); //adding the contents of the fields and labels to a box
 
         container.setLeft(fields); // setting the box at the left position on the border pane
         container.setRight(sp); //setting the scroll pane and table on the right position on the border pane
@@ -234,8 +234,8 @@ public class Levels {
                         new Students(
                                 rs.getString("RegdNumber"),
                                 rs.getString("FirstName"),
+                                rs.getString("otherName"),
                                 rs.getString("LastName"),
-                                rs.getString("Othername"),
                                 rs.getString("Email"),
                                 rs.getString("PhoneNumber"),
                                 rs.getString("Gender"))
@@ -365,17 +365,159 @@ public class Levels {
         alert.setContentText("Are you sure?");
         Optional<ButtonType> option = alert.showAndWait();
         if (option.get() == ButtonType.OK) {
-            try {
-                String query = "delete from " + table +" where regdnumber = ?";
-                ps = conn.prepareStatement(query);
-                ps.setString(1, pc.getText());
-                ps.executeUpdate();
+            if(table.compareToIgnoreCase("yearthreestudents")==0)
+            {
+                try {
+                    String query = "delete from " + table +" where regdnumber = ?";
+                    ps = conn.prepareStatement(query);
+                    ps.setString(1, pc.getText());
+                    ps.executeUpdate();
 
-                ps.close();
-            } catch (SQLException exc) {
-                System.err.println(exc);
+                    for(int i = 1; i <= 19; i++) {
+                        String course = "";
+                        if (i == 1)
+                            course = "CircuitTheoryII";
+                        if (i == 2)
+                            course = "ElectromagneticFieldsAndWaves";
+                        if (i == 3)
+                            course = "ElectromechDevicesAndMachinesI";
+                        if (i == 4)
+                            course = "PowerSystems";
+                        if (i == 5)
+                            course = "TelecommunicationI";
+                        if (i == 6)
+                            course = "ElectronicDevicesAndCircuitI";
+                        if (i == 7)
+                            course = "SignalAnalysisAndSystems";
+                        if (i == 8)
+                            course = "DigitalSystemDesignI";
+                        if (i == 9)
+                            course = "EngineeringMathematicsIII";
+                        if (i == 10)
+                            course = "CircuitTheoryIII";
+                        if (i == 11)
+                            course = "Electrodynamics";
+                        if (i == 12)
+                            course = "ElectromechDevicesAndMachinesII";
+                        if (i == 13)
+                            course = "InstrumentationAndMeasurementI";
+                        if (i == 14)
+                            course = "FeedbackAndControlSystem";
+                        if (i == 15)
+                            course = "TelecommunicationII";
+                        if (i == 16)
+                            course = "ElectronicDevicesAndCircuitII";
+                        if (i == 17)
+                            course = "PowerElectronics";
+                        if (i == 18)
+                            course = "DigitalSystemDesignII";
+
+                        String query2 = "delete from " + course +" where regdnumber = ?";
+                        ps = conn.prepareStatement(query2);
+                        ps.setString(1, pc.getText());
+                        ps.executeUpdate();
+                    }
+
+                    ps.close();
+                } catch (SQLException exc) {
+                    System.err.println(exc);
+                }
             }
+
+            if(table.compareToIgnoreCase("yearfourstudents")==0)
+            {
+                try {
+                    String query = "delete from " + table +" where regdnumber = ?";
+                    ps = conn.prepareStatement(query);
+                    ps.setString(1, pc.getText());
+                    ps.executeUpdate();
+
+                    for(int i = 1; i <= 9; i++) {
+                        String course = "";
+                            if(i==1)
+                                course = "EngineeringMathematicsIV";
+                            if(i==2)
+                                course = "EngineeringContractsAndSpecification";
+                            if(i==3)
+                                course = "CircuitTheoryIV";
+                            if(i==4)
+                                course = "InstrumentationAndMeasurementII";
+                            if(i==5)
+                                course = "MicroprocessorsAndComputers";
+                            if(i==6)
+                                course = "AssemblyLanguageProgramming";
+                            if(i==7)
+                                course = "AdvancedCircuitTechniques";
+                            if(i==8)
+                                course = "FundamentalOfDigitalCommunications";
+
+                        String query2 = "delete from " + course +" where regdnumber = ?";
+                        ps = conn.prepareStatement(query2);
+                        ps.setString(1, pc.getText());
+                        ps.executeUpdate();
+                    }
+
+                    ps.close();
+                } catch (SQLException exc) {
+                    System.err.println(exc);
+                }
+            }
+
+            if(table.compareToIgnoreCase("yearfivestudents")==0)
+            {
+                try {
+                    String query = "delete from " + table +" where regdnumber = ?";
+                    ps = conn.prepareStatement(query);
+                    ps.setString(1, pc.getText());
+                    ps.executeUpdate();
+
+                    for(int i = 1; i <= 16; i++) {
+                        String course = "";
+                        if(i==1)
+                            course = "ComputerAidedDesign";
+                        if(i==2)
+                            course = "RealtimeComputingAndControl";
+                        if(i==3)
+                            course = "SolidStateElectronics";
+                        if(i==4)
+                            course = "DigitalSignalProcessing";
+                        if(i==5)
+                            course = "ArtificialIntelligenceAndRobotics";
+                        if(i==6)
+                            course = "WirelessCommunicationAndNetwork";
+                        if(i==7)
+                            course = "SystemProgramming";
+                        if(i==8)
+                            course = "SoftwareEngineering";
+                        if(i==9)
+                            course = "DatabaseManagementSystems";
+                        if(i==10)
+                            course = "DataCommuniationNetwork";
+                        if(i==11)
+                            course = "NetworkAnalysisAndSynthesis";
+                        if(i==12)
+                            course = "ControlSystemEngineering";
+                        if(i==13)
+                            course = "Microwave Engineering";
+                        if(i==14)
+                            course = "TVSatelliteAndRadar";
+                        if(i==15)
+                            course = "OpticFibreCommunication";
+
+                        String query2 = "delete from " + course +" where regdnumber = ?";
+                        ps = conn.prepareStatement(query2);
+                        ps.setString(1, pc.getText());
+                        ps.executeUpdate();
+                    }
+
+                    ps.close();
+                } catch (SQLException exc) {
+                    System.err.println(exc);
+                }
+            }
+
         }
+
         clearFields();
         refreshTable(table);
     }
@@ -383,48 +525,46 @@ public class Levels {
     {
         tb.setOnKeyReleased( e->
         {
-            if(e.getCode() == KeyCode.UP || e.getCode() == KeyCode.DOWN)
-            {
-                try {
-                    Students students = (Students) tb.getSelectionModel().getSelectedItem();
-                    String query = "select * from "+table+" where regdnumber = ?";
-                    ps = conn.prepareStatement(query);
-                    ps.setString(1, students.getID());
-                    rs = ps.executeQuery();
+            if(e.getCode() == KeyCode.UP || e.getCode() == KeyCode.DOWN) {
 
-                    while(rs.next())
-                    {
-                        pc.setText(rs.getString("RegdNumber"));
-                        id1.setText(rs.getString("RegdNumber"));
-                        fn1.setText(rs.getString("FirstName"));
-                        ln1.setText(rs.getString("LastName"));
-                        on1.setText(rs.getString("OtherName"));
-                        ph1.setText(rs.getString("PhoneNumber"));
-                        em1.setText(rs.getString("Email"));
-                        ((TextField)dob1.getEditor()).setText(rs.getString("DOB"));
+                    try {
+                        Students students = (Students) tb.getSelectionModel().getSelectedItem();
+                        String query = "select * from " + table + " where regdnumber = ?";
+                        ps = conn.prepareStatement(query);
+                        ps.setString(1, students.getID());
+                        rs = ps.executeQuery();
 
-                        if( null != rs.getString("Gender"))
-                            switch(rs.getString("Gender"))
-                            {
-                                case "Male": m1.setSelected(true);
-                                    break;
-                                case "Female": fm1.setSelected(true);
-                                    break;
+                        while (rs.next()) {
+                            pc.setText(rs.getString("RegdNumber"));
+                            id1.setText(rs.getString("RegdNumber"));
+                            fn1.setText(rs.getString("FirstName"));
+                            ln1.setText(rs.getString("LastName"));
+                            on1.setText(rs.getString("OtherName"));
+                            ph1.setText(rs.getString("PhoneNumber"));
+                            em1.setText(rs.getString("Email"));
+                            ((TextField) dob1.getEditor()).setText(rs.getString("DOB"));
+
+                            if (null != rs.getString("Gender"))
+                                switch (rs.getString("Gender")) {
+                                    case "Male":
+                                        m1.setSelected(true);
+                                        break;
+                                    case "Female":
+                                        fm1.setSelected(true);
+                                        break;
+                                }
+                            else {
+                                m.setSelected(false);
+                                fm.setSelected(false);
                             }
-                        else
-                        {
-                            m.setSelected(false);
-                            fm.setSelected(false);
                         }
+                        ps.close();
+                        rs.close();
+                    } catch (SQLException excc) {
+                        System.out.print(excc);
                     }
-                    ps.close();
-                    rs.close();
                 }
-                catch(SQLException excc)
-                {
-                    System.out.print(excc);
-                }
-            }
+
         });
 
         tb.setOnMouseClicked(e ->
@@ -564,7 +704,7 @@ public class Levels {
         save1.setOnAction(sv ->
         {
             if(validate2()) {
-                DBQuery.updateQuery(table,id1, fn1, ln1, on1, em1, dob1, radioButtonLabel, ph1);
+                DBQuery.updateQuery(table,id1, fn1, on1, ln1, em1, dob1, radioButtonLabel, ph1);
                 clearFields();
                 refreshTable(table);
                 window.close();
@@ -583,7 +723,7 @@ public class Levels {
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(10,10,10,10));
         layout.setSpacing(20);
-        layout.getChildren().addAll(label2,id1,fn1, ln1, on1, em1, ph1, dob1, m1, fm1, hBox);
+        layout.getChildren().addAll(label2,id1,fn1, on1, ln1, em1, ph1, dob1, m1, fm1, hBox);
         Scene scene = new Scene(layout);
 
         window.setScene(scene);

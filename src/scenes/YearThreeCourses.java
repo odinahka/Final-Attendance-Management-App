@@ -54,10 +54,10 @@ public class YearThreeCourses {
         courses = FXCollections.observableArrayList(
                 "ELE 311 - Circuit Theory II",
                 "ELE 341 - Electromagnetic Fields and Waves",
-                "ELE 343 - Electromech Devices and Machine I",
+                "ELE 343 - Electromech Devices and Machines I",
                 "ELE 353 - Power Systems",
                 "ECE 321 - Telecommunication I",
-                "ECE 323 - Electronic Devices & Circuits I",
+                "ECE 323 - Electronic Devices and Circuits I",
                 "ECE 332 - Signals Analysis and Systems",
                 "ECE 333 - Digital System Design I",
                 "FEG 303 - Engineering Mathematics III"
@@ -162,11 +162,10 @@ public class YearThreeCourses {
             while(rs.next()){
                 data.add(
                         new CourseDetails(
-                                rs.getInt("ID"),
                                 rs.getString("RegdNumber"),
                                 rs.getString("FirstName"),
+                                rs.getString("OtherName"),
                                 rs.getString("LastName"),
-                                rs.getString("Othername"),
                                 rs.getInt("LectureNumber"),
                                 rs.getInt("LecturesAttended"),
                                 rs.getInt("AttendancePercentage")
