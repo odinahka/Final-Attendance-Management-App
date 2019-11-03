@@ -175,12 +175,12 @@ public class Levels {
         HBox hBox = new HBox(10);
         hBox.setPadding(new Insets(10,10,10,10));
         hBox.setSpacing(15);
-        hBox.getChildren().addAll(save, delete, load);
+        hBox.getChildren().add(save);
 
         HBox tableBox = new HBox(10);
         tableBox.setPadding(new Insets (10,200,10,10));
         tableBox.setAlignment(Pos.CENTER_RIGHT);
-        tableBox.getChildren().add(pc);
+        tableBox.getChildren().addAll(load,delete,pc);
         fields.getChildren().addAll(sc,label1,id,fn,on,ln,em,ph,dob,m,fm,hBox); //adding the contents of the fields and labels to a box
 
         container.setLeft(fields); // setting the box at the left position on the border pane
@@ -219,6 +219,18 @@ public class Levels {
         dob.getEditor().setText(null);
         m.setSelected(false);
         fm.setSelected(false);
+        pc.clear();
+        id1.clear();
+        fn1.clear();
+        ln1.clear();
+        on1.clear();
+        ph1.clear();
+        em1.clear();
+        dob1.setValue(null);
+        dob1.getEditor().setText(null);
+        m1.setSelected(false);
+        fm1.setSelected(false);
+
     }
 
     public void refreshTable(String table)

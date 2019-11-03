@@ -107,6 +107,6 @@ public class CourseDetails {
     }
 
     public void setAttendancePercentage(int attendancePercentage) {
-        this.AttendancePercentage.set(attendancePercentage);
+        this.AttendancePercentage.set((getNumberAttended()*100)/getLectureNumber());
     }
 }
