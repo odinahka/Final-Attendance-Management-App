@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.BoxAndPane;
+import models.ExcelForm;
 import models.Tables;
 import models.Texts;
 import storageUnit.CourseDetails;
@@ -139,6 +140,7 @@ public class YearFiveCourses {
 
     private void courseScene(String databaseName)
     {
+        ExcelForm excel = new ExcelForm();
         pc = text.textField(200,15,"");
         refreshTable(databaseName);
         Stage window = new Stage();
@@ -200,18 +202,27 @@ public class YearFiveCourses {
         MenuItem updateAttendance = new MenuItem("Update Attendance");
         update.getItems().add(updateAttendance);
 
-        Menu others, generateReport;
-             others = new Menu("Others");
-        generateReport = new Menu("Generate Report");
-        MenuItem authenticationReport = new MenuItem("Fingerprint Report");
-        MenuItem printableReport = new MenuItem("Printable Report");
-        MenuItem addStudent;
-        generateReport.getItems().addAll(authenticationReport, printableReport);
-        addStudent = new MenuItem("Add Students");
-        addStudent.setOnAction(e -> addStudentScene(databaseName));
-        others.getItems().addAll(addStudent,new SeparatorMenuItem(),generateReport);
+        Menu reports, generateReport, addStudents;
+             reports = new Menu("Reports");
 
-        menuBar.getMenus().addAll(update, others);
+        generateReport = new Menu("Generate Report");
+
+        MenuItem authenticationReport = new MenuItem("Fingerprint Report");
+        MenuItem printableReport = new MenuItem("Generate Attendance Report (Excel)");
+        MenuItem importExcel = new MenuItem("Import Students Details from Excel");
+
+        addStudents = new Menu("Add Students");
+        MenuItem oStudent;
+        generateReport.getItems().addAll(authenticationReport, printableReport);
+        oStudent = new MenuItem("Overstayed Students");
+        addStudents.getItems().add(oStudent);
+
+        oStudent.setOnAction(e -> addStudentScene(databaseName));
+        importExcel.setOnAction(e -> excel.importFromExcel(databaseName));
+        printableReport.setOnAction(e -> excel.exportToExcel(databaseName));
+        reports.getItems().addAll(importExcel,new SeparatorMenuItem(),generateReport);
+
+        menuBar.getMenus().addAll(update,addStudents, reports);
 
         borderpane.setTop(menuBar);
         tableFilter();
@@ -233,12 +244,8 @@ public class YearFiveCourses {
         ln = text.textField(200,15,"Last Name");
         rn =text.textField(200,15,"Regd Number");
 
-        fn.setEditable(false);
-        on.setEditable(false);
-        ln.setEditable(false);
-
-        Button search = bnp.button(50,10,"Search");
-        search.setOnAction(e -> searchAction());
+        //Button search = bnp.button(50,10,"Search");
+       // search.setOnAction(e -> searchAction());
         Button add = bnp.button(50,10,"Add");
         add.setOnAction(e ->
         {
@@ -248,34 +255,15 @@ public class YearFiveCourses {
             on.setText("");
             ln.setText("");
         });
-        hbox.getChildren().addAll(search, add);
+        hbox.getChildren().add(add);
         hbox.setSpacing(100);
         vbox.setPadding(new Insets(50));
         vbox.setSpacing(20);
-        vbox.getChildren().addAll(rn,hbox,fn,on,ln);
+        vbox.getChildren().addAll(rn,fn,on,ln,hbox);
         window.initModality(Modality.APPLICATION_MODAL);
         Scene scene = new Scene(vbox, 300,300);
         window.setScene(scene);
         window.show();
-    }
-
-    void searchAction(){
-        try {
-            String query = "select * from yearthreestudents where regdnumber = ?";
-            ps = conn.prepareStatement(query);
-            ps.setString(1, rn.getText());
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                fn.setText(rs.getString("FirstName"));
-                ln.setText(rs.getString("LastName"));
-                on.setText(rs.getString("OtherName"));
-            }
-            ps.close();
-            rs.close();
-        } catch (SQLException excc) {
-            System.out.print(excc);
-        }
     }
 
     void addAction(String databaseName)
@@ -290,7 +278,7 @@ public class YearFiveCourses {
                 ps.setString(4, ln.getText());
                 ps.setInt(5,0);
                 ps.setInt(6,0);
-                ps.setDouble(7,0.0);
+                ps.setInt(7,0);
                 ps.execute();
 
 

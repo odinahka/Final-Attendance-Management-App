@@ -118,4 +118,26 @@ public class Validation {
 
         return true;
     }
+    public boolean validateField(TextField username, RadioButton male, RadioButton female)
+    {
+        if(username.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validate UserName");
+            alert.setHeaderText(null);
+            alert.setContentText("Please Validate Username!");
+            alert.showAndWait();
+            return false;
+        }
+        if(!(male.isSelected()|| female.isSelected())) {
+            Alert alert1 = new Alert(Alert.AlertType.INFORMATION);
+            alert1.setTitle("Information Dialog");
+            alert1.setHeaderText(null);
+            alert1.setContentText("Please Validate Gender");
+            alert1.showAndWait();
+            return false;
+        }
+
+
+        return true;
+    }
 }

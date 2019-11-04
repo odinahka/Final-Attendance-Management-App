@@ -20,8 +20,8 @@ public class CourseDetails {
         firstName = new SimpleStringProperty(fName);
         lastName = new SimpleStringProperty(lName);
         this.otherName = new SimpleStringProperty(oName);
-        this.NumberAttended = new SimpleIntegerProperty(nAttended);
         this.lectureNumber = new SimpleIntegerProperty(lNumber);
+        this.NumberAttended = new SimpleIntegerProperty(nAttended);
         this.AttendancePercentage = new SimpleIntegerProperty(aPercentage);
 
     }
@@ -107,6 +107,6 @@ public class CourseDetails {
     }
 
     public void setAttendancePercentage(int attendancePercentage) {
-        this.AttendancePercentage.set((getNumberAttended()*100)/getLectureNumber());
+        this.AttendancePercentage.set(attendancePercentage);
     }
 }

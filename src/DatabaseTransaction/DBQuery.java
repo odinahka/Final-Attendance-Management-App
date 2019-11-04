@@ -80,14 +80,14 @@ public class DBQuery {
                     ps.setString(4, lastName.getText());
                     ps.setInt(5,0);
                     ps.setInt(6,0);
-                    ps.setDouble(7,0.0);
+                    ps.setInt(7,0);
                     ps.execute();
                 }
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
-                alert.setContentText("User has been created");
+                alert.setContentText("Students details have been added");
                 alert.showAndWait();
 
                 ps.close();
@@ -137,14 +137,14 @@ public class DBQuery {
                     ps.setString(4, lastName.getText());
                     ps.setInt(5,0);
                     ps.setInt(6,0);
-                    ps.setDouble(7,0.0);
+                    ps.setInt(7,0);
                     ps.execute();
                 }
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
-                alert.setContentText("User has been created");
+                alert.setContentText("Students details have been added");
                 alert.showAndWait();
 
                 ps.close();
@@ -208,14 +208,14 @@ public class DBQuery {
                     ps.setString(4, lastName.getText());
                     ps.setInt(5,0);
                     ps.setInt(6,0);
-                    ps.setDouble(7,0.0);
+                    ps.setInt(7,0);
                     ps.execute();
                 }
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
-                alert.setContentText("User has been created");
+                alert.setContentText("Students details have been added");
                 alert.showAndWait();
 
                 ps.close();
@@ -225,6 +225,41 @@ public class DBQuery {
             }
         }
     }
+
+    public static void query2(String authorizedTable, TextField id, TextField fn, TextField ln, TextField un, TextField pw, TextField em, TextField pn, String radioBL)
+    {
+        PreparedStatement ps;
+        Connection conn = DBconnection.Dbconnect(); // checkConnection();;
+
+
+        try {
+            String query = "INSERT INTO " + authorizedTable + " (ID, FirstName, LastName, Username, Password, Email, PhoneNumber, Gender) VALUES (?,?,?,?,?,?,?,?)";
+            ps = conn.prepareStatement(query);
+            ps.setString(1, id.getText());
+            ps.setString(2, fn.getText());
+            ps.setString(3, ln.getText());
+            ps.setString(4, un.getText());
+            ps.setString(5, pw.getText());
+            ps.setString(6, em.getText());
+            ps.setString(7, pn.getText());
+            ps.setString(8, radioBL);
+            ps.execute();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("User has been Added");
+            alert.showAndWait();
+
+            ps.close();
+        }
+        catch(Exception e)
+        {
+            System.out.print(e);
+        }
+    }
+
+
 
     public static void updateQuery(String studentsTable, TextField id, TextField firstName, TextField otherName,TextField lastName, TextField email, DatePicker date, String radioButtonLabel, TextField phoneNo )
     {
@@ -294,7 +329,7 @@ public class DBQuery {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
-                alert.setContentText("User has been Updated");
+                alert.setContentText("Students details have been updated");
                 alert.showAndWait();
 
                 ps.close();
@@ -348,7 +383,7 @@ public class DBQuery {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
-                alert.setContentText("User has been Updated");
+                alert.setContentText("Students details have been updated");
                 alert.showAndWait();
 
                 ps.close();
@@ -416,7 +451,7 @@ public class DBQuery {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
-                alert.setContentText("User has been Updated");
+                alert.setContentText("Students details have been updated");
                 alert.showAndWait();
 
                 ps.close();
@@ -427,4 +462,39 @@ public class DBQuery {
         }
 
     }
+
+    public static void updateQuery1(String authorizedTable, TextField id, TextField fn, TextField ln, TextField un, TextField pw, TextField em, TextField pn, String radioBL)
+    {
+        PreparedStatement ps;
+        Connection conn = DBconnection.Dbconnect(); // checkConnection();;
+
+
+        try {
+            String query = "update " + authorizedTable + " set ID=?, FirstName=?, LastName=?, Username=?, Password=?, Email=?, PhoneNumber=?, Gender=? where ID ='" + id.getText() + "'";
+            ps = conn.prepareStatement(query);
+            ps.setString(1, id.getText());
+            ps.setString(2, fn.getText());
+            ps.setString(3, ln.getText());
+            ps.setString(4, un.getText());
+            ps.setString(5, pw.getText());
+            ps.setString(6, em.getText());
+            ps.setString(7, pn.getText());
+            ps.setString(8, radioBL);
+            ps.execute();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("User has been Updated");
+            alert.showAndWait();
+
+            ps.close();
+        }
+        catch(Exception e)
+        {
+            System.out.print(e);
+        }
+    }
+
+
 }

@@ -34,18 +34,19 @@ public class Tables {
 
         TableColumn column6 = new TableColumn("Gender");
         column6.setMinWidth(50);
-        column6.setCellValueFactory(new PropertyValueFactory<>("Gender"));
+        column6.setCellValueFactory(new PropertyValueFactory<>("gender"));
 
-        TableColumn column7 = new TableColumn("Phone No.");
+        TableColumn column7 = new TableColumn("Password");
         column7.setMinWidth(50);
-        column7.setCellValueFactory(new PropertyValueFactory<>("phoneNo"));
+        column7.setCellValueFactory(new PropertyValueFactory<>("password"));
 
-        TableColumn column8 = new TableColumn("Password.");
+        TableColumn column8 = new TableColumn("Phone No.");
         column8.setMinWidth(50);
-        column8.setCellValueFactory(new PropertyValueFactory<>("Password"));
+        column8.setCellValueFactory(new PropertyValueFactory<>("phoneNo"));
 
 
-        table.getColumns().addAll(column1, column2, column3, column4,column5, column6, column7, column8);
+
+        table.getColumns().addAll(column1, column2, column3, column4,column5, column6, column8);
         table.setTableMenuButtonVisible(true);
         return table;
     }
@@ -116,11 +117,11 @@ public class Tables {
 
         TableColumn <CourseDetails, Integer> column7 = new TableColumn<>("Lectures Attended");
         column7.setMinWidth(50);
-        column7.setCellValueFactory(new PropertyValueFactory<>("lecturesAttended"));
+        column7.setCellValueFactory(new PropertyValueFactory<>("NumberAttended"));
 
         TableColumn <CourseDetails, Integer> column8 = new TableColumn<>("Attendance Percentage");
         column8.setMinWidth(50);
-        column8.setCellValueFactory(new PropertyValueFactory<>("attendancePecentage"));
+        column8.setCellValueFactory(new PropertyValueFactory<>("AttendancePercentage"));
 
 
         table.getColumns().addAll(column2, column3, column4,column5, column6, column7, column8);

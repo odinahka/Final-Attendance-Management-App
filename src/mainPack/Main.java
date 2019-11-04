@@ -228,6 +228,13 @@ public class Main extends Application {
             prop.level("yearfivestudents");
         });
 
+        btn6.setOnAction(event ->
+        {
+            secondaryStage.hide();
+            Levels prop = new Levels(secondaryStage);
+            prop.authorizedUsers("authorized");
+        });
+
 
         options.getChildren().addAll(btn1,btn2,btn3,btn4, btn5, btn6, btn7);
 
