@@ -229,8 +229,7 @@ public class DBQuery {
     public static void query2(String authorizedTable, TextField id, TextField fn, TextField ln, TextField un, TextField pw, TextField em, TextField pn, String radioBL)
     {
         PreparedStatement ps;
-        Connection conn = DBconnection.Dbconnect(); // checkConnection();;
-
+        Connection conn = DBconnection.Dbconnect(); // checkConnection()
 
         try {
             String query = "INSERT INTO " + authorizedTable + " (ID, FirstName, LastName, Username, Password, Email, PhoneNumber, Gender) VALUES (?,?,?,?,?,?,?,?)";

@@ -88,6 +88,10 @@ public class Levels {
     {
         //Stage and scene setup
         BorderPane container = new BorderPane();
+        VBox capture = new VBox();
+        capture.setFillWidth(true);
+        Button btn = new Button("Hey");
+        capture.getChildren().add(btn);
         Scene levelThree = new Scene(container,1200,700);
         tertiaryStage.setScene(levelThree);
         tertiaryStage.show();
@@ -186,6 +190,8 @@ public class Levels {
         container.setLeft(fields); // setting the box at the left position on the border pane
         container.setRight(sp); //setting the scroll pane and table on the right position on the border pane
         container.setBottom(tableBox);
+        capture.setAlignment(Pos.TOP_CENTER);
+        container.setCenter(capture);
         container.setTop(menuBar);
     }
     public void authorizedUsers(String uTable)

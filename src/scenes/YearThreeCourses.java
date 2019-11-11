@@ -86,6 +86,23 @@ public class YearThreeCourses {
                     }
                 }
         );
+        listView.setOnMouseClicked(e -> {
+
+                    String databaseName = "" ;
+                    for(String m : courses)
+                    {
+                        if(m == (String)listView.getSelectionModel().getSelectedItem()) {
+                            m = m.replaceAll("\\s", "");
+                            databaseName = m.substring(7);
+                            System.out.println(databaseName);
+                        }
+                    }
+
+                    courseScene(databaseName);
+
+                }
+        );
+
         vbox.getChildren().add(listView);
         Scene scene = new Scene(vbox);
         window.setScene(scene);
@@ -137,6 +154,23 @@ public class YearThreeCourses {
                     }
                 }
         );
+        listView.setOnMouseClicked(e -> {
+
+                    String databaseName = "" ;
+                    for(String m : courses)
+                    {
+                        if(m == (String)listView.getSelectionModel().getSelectedItem()) {
+                            m = m.replaceAll("\\s", "");
+                            databaseName = m.substring(7);
+                            System.out.println(databaseName);
+                        }
+                    }
+
+                    courseScene(databaseName);
+
+                }
+        );
+
         vbox.getChildren().add(listView);
         Scene scene = new Scene(vbox);
         window.setScene(scene);

@@ -87,12 +87,77 @@ public class ExcelForm {
         }
 
     }
+  public void exportFinalToExcel()
+  {
+      try {
+          String query = "Select * from yearfivestudents";
+          ps = conn.prepareStatement(query);
+          rs = ps.executeQuery();
+          HSSFWorkbook wb = new HSSFWorkbook();
+          HSSFSheet sh = wb.createSheet("Backup Students Details");
+          HSSFRow rw = sh.createRow(0);
+          rw.createCell(0).setCellValue("Regd Number");
+          rw.createCell(1).setCellValue("First Name");
+          rw.createCell(2).setCellValue("Other Name");
+          rw.createCell(3).setCellValue("Last Name");
+          rw.createCell(4).setCellValue("Phone Number");
+          rw.createCell(5).setCellValue("Email");
+          rw.createCell(6).setCellValue("DOB");
+          rw.createCell(7).setCellValue("Gender");
+
+          sh.setColumnWidth(0, 200*25);
+          sh.setColumnWidth(1, 200*25);
+          sh.setColumnWidth(2, 200*25);
+          sh.setColumnWidth(3, 200*25);
+          sh.setColumnWidth(4, 200*25);
+          sh.setColumnWidth(5, 200*25);
+          sh.setColumnWidth(6, 200*25);
+          sh.setColumnWidth(7, 200*25);
+
+          sh.setZoom(150);
+
+          int index = 1;
+
+          while(rs.next())
+          {
+              HSSFRow rw1 = sh.createRow(index);
+              index++;
+              rw1.createCell(0).setCellValue(rs.getString("RegdNumber"));
+              rw1.createCell(1).setCellValue(rs.getString("FirstName"));
+              rw1.createCell(2).setCellValue(rs.getString("OtherName"));
+              rw1.createCell(3).setCellValue(rs.getString("LastName"));
+              rw1.createCell(4).setCellValue(rs.getString("PhoneNumber"));
+              rw1.createCell(5).setCellValue(rs.getString("Email"));
+              rw1.createCell(6).setCellValue(rs.getString("DOB"));
+              rw1.createCell(6).setCellValue(rs.getString("Gender"));
+
+          }
+          FileOutputStream fileOut = new FileOutputStream("backup.xls");
+          wb.write(fileOut);
+          fileOut.close();
+
+          Alert alert = new Alert(Alert.AlertType.INFORMATION);
+          alert.setTitle("Information Dialog");
+          alert.setHeaderText(null);
+          alert.setContentText("Final year students details exported to EXCEL as backup.xls");
+          alert.showAndWait();
+
+          ps.close();
+          rs.close();
+
+
+      }
+      catch(Exception eec)
+      {
+          System.err.println(eec);
+      }
+  }
 
   public void importFromExcel(String databaseName)
     {
         try
         {
-            String query = "Insert into UserDatabase (RegdNumber, FirstName, LastName, LastName) values (?,?,?,?)";
+            String query = "Insert into "+databaseName+ " (RegdNumber, FirstName, LastName, LastName) values (?,?,?,?)";
             ps = conn.prepareStatement(query);
             FileInputStream fileIn = new FileInputStream(databaseName+".xls");
             HSSFWorkbook workbook = new HSSFWorkbook(fileIn);
@@ -102,7 +167,7 @@ public class ExcelForm {
             {
                 row = sh.getRow(i);
 
-                ps.setInt(1, (int) row.getCell(0).getNumericCellValue());
+                ps.setString(1, row.getCell(0).getStringCellValue());
                 ps.setString(2, row.getCell(1).getStringCellValue());
                 ps.setString(3, row.getCell(2).getStringCellValue());
                 ps.setString(4, row.getCell(3).getStringCellValue());

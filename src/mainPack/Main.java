@@ -195,7 +195,7 @@ public class Main extends Application {
 
         //FOR SECOND SCENE
 
-        Button btn1, btn2, btn3, btn4, btn5, btn6, btn7;
+        Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8;
 
         //Defining buttons
         btn1 = bp.button(200,20,"100 Level");
@@ -203,8 +203,10 @@ public class Main extends Application {
         btn3 = bp.button(200,20,"300 Level");
         btn4 = bp.button(200,20,"400 Level");
         btn5 = bp.button(200,20,"500 Level");
-        btn6 = bp.button(200,20,"Lecturers");
+        btn6 = bp.button(200,20,"Admin");
         btn7 = bp.button(50,15,"Exit");
+        btn8 = bp.button(200,20,"Promote");
+
 
         //Assigning actions to the different buttons
         btn3.setOnAction(event ->
@@ -234,9 +236,11 @@ public class Main extends Application {
             Levels prop = new Levels(secondaryStage);
             prop.authorizedUsers("authorized");
         });
+         btn7.setOnAction(e -> Platform.exit());
+        btn8.setOnAction(e -> Promote.promote());
 
 
-        options.getChildren().addAll(btn1,btn2,btn3,btn4, btn5, btn6, btn7);
+        options.getChildren().addAll(btn1,btn2,btn3,btn4, btn5, btn6, btn8, btn7);
 
         place.setCenter(options);
 

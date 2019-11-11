@@ -85,6 +85,23 @@ public class YearFourCourses {
                     }
                 }
         );
+        listView.setOnMouseClicked(e -> {
+
+                    String databaseName = "" ;
+                    for(String m : courses)
+                    {
+                        if(m == (String)listView.getSelectionModel().getSelectedItem()) {
+                            m = m.replaceAll("\\s", "");
+                            databaseName = m.substring(7);
+                            System.out.println(databaseName);
+                        }
+                    }
+
+                    courseScene(databaseName);
+
+                }
+        );
+
         vbox.getChildren().add(listView);
         Scene scene = new Scene(vbox);
         window.setScene(scene);
@@ -170,7 +187,10 @@ public class YearFourCourses {
         cStudent.setOnAction(e -> addCStudentScene(databaseName));
         oStudent.setOnAction(e -> addOStudentScene(databaseName));
         printableReport.setOnAction(e -> excel.exportToExcel(databaseName));
-        importExcel.setOnAction(e -> excel.importFromExcel(databaseName));
+        importExcel.setOnAction(e -> {
+            excel.importFromExcel(databaseName);
+            refreshTable(databaseName);
+        });
         addStudents.getItems().addAll(cStudent,oStudent);
         others.getItems().addAll(importExcel,new SeparatorMenuItem(),generateReport);
 
