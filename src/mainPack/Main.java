@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -51,8 +52,10 @@ public class Main extends Application {
         tertiaryStage = new Stage();
         //Parent root = FXMLLoader.load(getClass().getResource("MainController.fxml"));
         secondaryStage.setTitle("Attendance Manager");
+        secondaryStage.getIcons().add(new Image("file:Unizik.png"));
         conn = DBconnection.Dbconnect(); // checkConnection();
         secondScene = new Scene(place,280,500);
+        secondScene.getStylesheets().add(getClass().getResource("mainDesign.css").toExternalForm());
         secondaryStage.setResizable(false);
         //scene1.getStylesheets().add(getClass().getResource("StyleSheet.css").toExternalForm());
     }

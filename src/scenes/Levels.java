@@ -22,6 +22,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -72,6 +73,8 @@ public class Levels {
     public Levels(Stage secondaryStage)
     {
         second = secondaryStage;
+        second.getIcons().add(new Image ("file:Unizik.png"));
+       second.setTitle("Attendance Manager");
         bp = new BoxAndPane();
         fields = bp.vbox();
         options = bp.vbox();
@@ -79,6 +82,8 @@ public class Levels {
         table = new Tables();
         texts = new Texts();
         tertiaryStage = new Stage();
+        tertiaryStage.getIcons().add(new Image("file:Unizik.png"));
+        tertiaryStage.setTitle("Attendance Manager");
         //Parent root = FXMLLoader.load(getClass().getResource("MainController.fxml"));
         conn = DBconnection.Dbconnect(); // checkConnection();
         secondScene = new Scene(place,280,500);
@@ -94,6 +99,7 @@ public class Levels {
         capture.getChildren().add(btn);
         Scene levelThree = new Scene(container,1200,700);
         tertiaryStage.setScene(levelThree);
+        levelThree.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
         tertiaryStage.show();
         MenuBar menuBar = menu(sTable);
 
@@ -199,6 +205,7 @@ public class Levels {
             //Stage and scene setup
             BorderPane container = new BorderPane();
             Scene levelThree = new Scene(container,1200,700);
+            levelThree.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
             tertiaryStage.setScene(levelThree);
             tertiaryStage.show();
 
@@ -1045,11 +1052,13 @@ public class Levels {
     {
 
         Stage window = new Stage();
+        window.getIcons().add(new Image ("file:Unizik.png"));
+        window.setTitle("Attendance Manager");
         BoxAndPane bnp = new BoxAndPane();
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setWidth(300);
-        window.setHeight(550);
+        window.setHeight(600);
 
         save1 = bnp.button(50,10,"Update");
         save1.setOnAction(sv ->
@@ -1093,7 +1102,7 @@ public class Levels {
             layout.getChildren().addAll(label2, id1, fn1, on1, ln1, em1, ph1, dob1, m1, fm1, hBox);
         }
         Scene scene = new Scene(layout);
-
+        scene.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
         window.setScene(scene);
         window.show();
 

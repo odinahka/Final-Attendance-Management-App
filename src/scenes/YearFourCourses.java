@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -48,6 +49,8 @@ public class YearFourCourses {
 
         conn = DBconnection.Dbconnect();
         Stage window = new Stage();
+        window.getIcons().add(new Image("file:Unizik.png"));
+        window.setTitle("Attendance Manager");
 
         VBox vbox = new VBox(10);
         vbox.setAlignment(Pos.CENTER);
@@ -104,6 +107,7 @@ public class YearFourCourses {
 
         vbox.getChildren().add(listView);
         Scene scene = new Scene(vbox);
+        scene.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
         window.setScene(scene);
         window.initModality(Modality.APPLICATION_MODAL);
         window.show();
@@ -115,10 +119,13 @@ public class YearFourCourses {
         pc = texts.textField(200,15,"");
         refreshTable(databaseName);
         Stage window = new Stage();
+        window.getIcons().add(new Image ("file:Unizik.png"));
+        window.setTitle("Attendance Manager");
         window.initModality(Modality.APPLICATION_MODAL);
         BoxAndPane bp = new BoxAndPane();
         BorderPane borderpane = new BorderPane();
         Scene scene = new Scene(borderpane, 700,400);
+        scene.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
         tb = table.CoursesTable();
         ScrollPane sp = bp.scrollpane(600,400,tb);
         HBox spContainer = new HBox(10);
@@ -210,6 +217,8 @@ public class YearFourCourses {
         HBox hbox = new HBox();
         BoxAndPane bnp = new BoxAndPane();
         Stage window = new Stage();
+        window.getIcons().add(new Image ("file:Unizik.png"));
+        window.setTitle("Attendance Manager");
 
         fn = texts.textField(200,15,"First Name");
         on = texts.textField(200,15,"Other Name");
@@ -234,6 +243,7 @@ public class YearFourCourses {
         vbox.getChildren().addAll(rn,fn,on,ln,hbox);
         window.initModality(Modality.APPLICATION_MODAL);
         Scene scene = new Scene(vbox, 300,300);
+        scene.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
         window.setScene(scene);
         window.show();
     }
@@ -242,6 +252,9 @@ public class YearFourCourses {
         HBox hbox = new HBox();
         BoxAndPane bnp = new BoxAndPane();
         Stage window = new Stage();
+        window.getIcons().add(new Image ("file:Unizik.png"));
+        window.setTitle("Attendance Manager");
+
         fn = texts.textField(200,15,"First Name");
         on = texts.textField(200,15,"Other Name");
         ln = texts.textField(200,15,"Last Name");
@@ -269,6 +282,7 @@ public class YearFourCourses {
         vbox.getChildren().addAll(rn,hbox,fn,on,ln);
         window.initModality(Modality.APPLICATION_MODAL);
         Scene scene = new Scene(vbox, 300,300);
+        scene.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
         window.setScene(scene);
         window.show();
     }
