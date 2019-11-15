@@ -1,6 +1,7 @@
 package scenes;
 
 import DatabaseTransaction.DBconnection;
+import communication.Communication;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -44,6 +45,7 @@ public class YearFiveCourses {
     Tables table = new Tables();
     Texts text = new Texts();
     TextField search, fn, ln, on, rn, pc;
+    Communication comm;
 
     public void firstSemester() {
 

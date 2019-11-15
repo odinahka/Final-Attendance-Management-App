@@ -6,6 +6,8 @@ package scenes;
  */
 import DatabaseTransaction.DBQuery;
 import DatabaseTransaction.DBconnection;
+import Interfaces.SerialCommlListener;
+import communication.Communication;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +29,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.*;
@@ -39,7 +44,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class Levels {
+public class Levels{
     PreparedStatement ps = null;
     ResultSet rs = null;
     Connection conn;
@@ -48,6 +53,8 @@ public class Levels {
     private VBox fields, options;
     //fields and labels setup
     private TextField id, fn, ln, em, ph, on,sc, pc, pw;
+   private static Label flabel;
+    public static int fingerprint = 0;
     private DatePicker dob;
     private RadioButton m,fm;
 
@@ -69,6 +76,8 @@ public class Levels {
     BorderPane place;
     Tables table;
     Texts texts;
+    Communication comm;
+
 
     public Levels(Stage secondaryStage)
     {
@@ -81,22 +90,45 @@ public class Levels {
         place = new BorderPane();
         table = new Tables();
         texts = new Texts();
+        comm = new Communication();
         tertiaryStage = new Stage();
+        flabel = new Label();
         tertiaryStage.getIcons().add(new Image("file:Unizik.png"));
-        tertiaryStage.setTitle("Attendance Manager");
         //Parent root = FXMLLoader.load(getClass().getResource("MainController.fxml"));
         conn = DBconnection.Dbconnect(); // checkConnection();
         secondScene = new Scene(place,280,500);
         //scene1.getStylesheets().add(getClass().getResource("StyleSheet.css").toExternalForm());
     }
+    public static void captureCallBack(int ID)
+    {
+       fingerprint = ID;
+        if(fingerprint == 0)
+            flabel.setText("Not Captured");
+        if(fingerprint != 0)
+            flabel.setText("Captured");
+    }
     public void level(String sTable)
     {
+        if(sTable.compareToIgnoreCase("yearthreestudents")==0)
+            tertiaryStage.setTitle("Attendance Manager - 300 level");
+        if(sTable.compareToIgnoreCase("yearfourstudents")==0)
+            tertiaryStage.setTitle("Attendance Manager - 400 level");
+        if(sTable.compareToIgnoreCase("yearfivestudents")==0)
+            tertiaryStage.setTitle("Attendance Manager - 500 level");
         //Stage and scene setup
         BorderPane container = new BorderPane();
         VBox capture = new VBox();
+        capture.setSpacing(30);
         capture.setFillWidth(true);
-        Button btn = new Button("Hey");
-        capture.getChildren().add(btn);
+        flabel.setFont(Font.font("SanSerif", FontWeight.BOLD, 20));
+        Button btn = new Button("Capture Fingerprint");
+        btn.setOnAction(e ->{
+            registerPrint(sTable);
+        });
+
+        btn.setStyle("-fx-background-color: MidnightBlue");
+        btn.setTextFill(Color.WHITESMOKE);
+        capture.getChildren().addAll(btn, flabel);
         Scene levelThree = new Scene(container,1200,700);
         tertiaryStage.setScene(levelThree);
         levelThree.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
@@ -203,6 +235,7 @@ public class Levels {
     public void authorizedUsers(String uTable)
     {
             //Stage and scene setup
+            tertiaryStage.setTitle("Attendance Manager - Administrators");
             BorderPane container = new BorderPane();
             Scene levelThree = new Scene(container,1200,700);
             levelThree.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
@@ -356,6 +389,7 @@ public class Levels {
         ph.clear();
         on.clear();
         sc.clear();
+        flabel.setText("");
         dob.setValue(null);
         dob.getEditor().setText(null);
         m.setSelected(false);
@@ -367,6 +401,7 @@ public class Levels {
         on1.clear();
         ph1.clear();
         em1.clear();
+
         dob1.setValue(null);
         dob1.getEditor().setText(null);
         m1.setSelected(false);
@@ -384,6 +419,7 @@ public class Levels {
         on.clear();
         sc.clear();
         pw.clear();
+        flabel.setText("");
         m.setSelected(false);
         fm.setSelected(false);
         pc.clear();
@@ -1107,4 +1143,105 @@ public class Levels {
         window.show();
 
     }
-}
+    //bad
+    public static boolean newDataForRegister = false;
+
+    void Getdata(int id){
+        //Communication.lvl = this;
+        for(long x = 1 ; ; ){
+            if(newDataForRegister){
+                break;
+            }
+            for(long y = -9000000; y < 9000000; y++);
+
+            //System.out.print(newDataForRegister);
+        }
+
+        captureCallBack(fingerprint);
+    }
+
+
+    void registerPrint(String sTable){
+        if(sTable.compareToIgnoreCase("yearthreestudents")== 0)
+        {
+            int ID = 0;
+            for(int i = 1; i <=40; i++) {
+                try {
+                    String query = "select * from " + sTable + " where RegdNumber = ?";
+                    ps = conn.prepareStatement(query);
+                    rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        if (rs.getInt("Fingerprint") == i)
+                            break;
+                    }
+                    ps.close();
+                    rs.close();
+
+                } catch (SQLException excc) {
+                    System.out.print(excc);
+                    ID = i;
+                    break;
+                }
+
+            }
+           // Communication.lvl = this;
+            comm.getFingerprintID(ID);
+            Getdata(ID);
+        }
+
+        if(sTable.compareToIgnoreCase("yearfourstudents")== 0)
+        {
+            int ID = 0;
+            for(int i = 41; i <=80; i++)
+            {
+                try {
+                    String query = "select * from " + sTable + " where RegdNumber = ?";
+                    ps = conn.prepareStatement(query);
+                    rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        if (rs.getInt("Fingerprint") == i)
+                            break;
+                    }
+                    ps.close();
+                    rs.close();
+
+                } catch (SQLException excc) {
+                    System.out.print(excc);
+                    ID = i;
+                    break;
+                }
+
+            }
+            comm.getFingerprintID(ID);
+
+        }
+
+        if(sTable.compareToIgnoreCase("yearfivestudents")== 0)
+        {
+            int ID = 0;
+            for(int i = 81; i <=120; i++)
+            {
+                try {
+                    String query = "select * from " + sTable + " where RegdNumber = ?";
+                    ps = conn.prepareStatement(query);
+                    rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        if (rs.getInt("Fingerprint") == i)
+                            break;
+                    }
+                    ps.close();
+                    rs.close();
+
+                } catch (SQLException excc) {
+                    System.out.print(excc);
+                    ID = i;
+                    break;
+                }
+
+            }
+            comm.getFingerprintID(ID);
+        }
+}}

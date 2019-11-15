@@ -64,7 +64,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://D:/ArduinoAttendanceProject.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../New folder (2)/ArduinoAttendanceProject.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

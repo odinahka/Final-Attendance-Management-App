@@ -53,7 +53,7 @@ public class BoxAndPane {
     {
         Button b = new Button(detail);
         b.setPrefWidth(prefWidth);
-        b.setStyle("-fx-background-color: MidnightBlue");
+        b.setStyle("-fx-background-color: linear-gradient(MidnightBlue, black)");
         b.setTextFill(Color.WHITESMOKE);
         b.setFont(Font.font("SanSerif", FontWeight.BOLD, fontSize));
         return b;

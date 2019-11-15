@@ -65,6 +65,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         primaryStage.initStyle(StageStyle.TRANSPARENT); //makes the primary stage transparent
+        primaryStage.getIcons().add(new Image("file:Unizik.png"));
         Group root = new Group(); //creates a container for all contents of scene1
         loginScene = new Scene(root, 280, 200, Color.rgb(0,0,0,0)); //adds the group "root" to the login scene
         //rectangular background
@@ -133,6 +134,8 @@ public class Main extends Application {
         Button b,b1;
         b = new Button("Login");
         b.setPrefWidth(60);
+        b.setStyle("-fx-background-color: linear-gradient(MidnightBlue, black)");
+        b.setTextFill(Color.WHITESMOKE);
         b.setFont(Font.font("SanSerif", 15));
 
         b.setOnAction( e -> { //set an on action command for login button
@@ -168,6 +171,8 @@ public class Main extends Application {
         b1 = new Button("Exit");
         b1.setPrefWidth(60);
         b1.setFont(Font.font("SanSerif", 15));
+        b1.setStyle("-fx-background-color: linear-gradient(MidnightBlue, black)");
+        b1.setTextFill(Color.WHITESMOKE);
         System.out.println();
         b1.setOnAction( e ->
         {
