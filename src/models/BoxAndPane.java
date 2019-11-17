@@ -18,8 +18,8 @@ import java.io.InputStream;
 public class BoxAndPane {
    public VBox vbox()
     {
-     VBox vb = new VBox(20);
-        vb.setPadding(new Insets(30, 0, 0, 40));
+     VBox vb = new VBox(10);
+        vb.setPadding(new Insets(20, 0, 0, 40));
         return vb;
     }
 

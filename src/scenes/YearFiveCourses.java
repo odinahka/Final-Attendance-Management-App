@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 /**
  * Created by odinahka on 9/19/2019.
  */
-public class YearFiveCourses {
+public class YearFiveCourses implements ILevels {
 
     Connection conn;
     PreparedStatement ps;
@@ -46,7 +46,12 @@ public class YearFiveCourses {
     Texts text = new Texts();
     TextField search, fn, ln, on, rn, pc;
     Communication comm;
-
+    @Override
+    public void UpdateTable(String tableName)
+    {
+        updateAttendance(tableName);
+        refreshTable(tableName);
+    }
     public void firstSemester() {
 
         conn = DBconnection.Dbconnect();
@@ -245,6 +250,12 @@ public class YearFiveCourses {
         MenuBar menuBar = new MenuBar();
         Menu update = new Menu("Update");
         MenuItem updateAttendance = new MenuItem("Update Attendance");
+        updateAttendance.setOnAction( e ->
+        {
+            Communication.UpdateAttendace(databaseName, this);
+
+        });
+
         update.getItems().add(updateAttendance);
 
         Menu reports, generateReport, addStudents;
@@ -253,6 +264,7 @@ public class YearFiveCourses {
         generateReport = new Menu("Generate Report");
 
         MenuItem authenticationReport = new MenuItem("Fingerprint Report");
+        authenticationReport.setOnAction(e -> sendAttendance(databaseName));
         MenuItem printableReport = new MenuItem("Generate Attendance Report (Excel)");
         MenuItem importExcel = new MenuItem("Import Students Details from Excel");
 
@@ -274,8 +286,8 @@ public class YearFiveCourses {
         tableClick(databaseName);
         tableMove(databaseName);
         window.setScene(scene);
-        window.setMinWidth(850);
-        window.setMinHeight(700);
+        window.setMinWidth(900);
+        window.setMinHeight(500);
         window.show();
     }
     void addStudentScene(String databaseName){
@@ -502,6 +514,90 @@ public class YearFiveCourses {
         //label.setText("SQL error");
         System.err.println(exp);
     }
+    }
+    public void updateAttendance(String table){
+      int [] dataa = Levels.daata;
+        Boolean check = false;
+        int lectureNumber, lecturesAttended, attendancePercentage;
+            lectureNumber = 0;
+        try {
+            String query = "select * from " + table;
+            ps= conn.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                for(int i = 0; i < dataa.length - 1; i++)
+                {
+                    check = false;
+                    if(dataa[i] == rs.getInt("Fingerprint"))
+                    {
+                        lectureNumber = rs.getInt("LectureNumber");
+                        lectureNumber++;
+                        lecturesAttended =rs.getInt("LecturesAttended");
+                        lecturesAttended++;
+                        attendancePercentage = (lecturesAttended /lectureNumber) * 100;
+                        String query1 = "update "+table+" set LectureNumber=?, LecturesAttended=?, AttendancePercentage=? where Fingerprint ='"+dataa[i]+"'";
+                        ps = conn.prepareStatement(query1);
+                        ps.setInt(1, lectureNumber);
+                        ps.setInt(2, lecturesAttended);
+                        ps.setInt(3, attendancePercentage);
+                        ps.execute();
+                        check = true;
+                        break;
+                    }
+                }
+               if(!check)
+               {        lectureNumber = rs.getInt("LectureNumber");
+                        lectureNumber++;
+                        lecturesAttended =rs.getInt("LecturesAttended");
+                        attendancePercentage = (lecturesAttended /lectureNumber) * 100;
+                        String query1 = "update "+table+" set LectureNumber=?, LecturesAttended=?, AttendancePercentage=? where fingerprint ='"+rs.getInt("fingerprint")+"'";
+                        ps = conn.prepareStatement(query1);
+                        ps.setInt(1, lectureNumber);
+                        ps.setInt(2, lecturesAttended);
+                        ps.setInt(3, attendancePercentage);
+                        ps.execute();
+               }
+            }
+            ps.close();
+            rs.close();
+
+
+        } catch (SQLException excc) {
+            System.out.print(excc);
+        }
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Students Attendance have been updated");
+            alert.showAndWait();
+
+
+    }
+    void sendAttendance(String table) {
+        String data = "";
+        try {
+            String query = "select fingerprint, attendancePercentage from " + table;
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                data += rs.getInt("fingerprint")+":"+rs.getInt("attendancePercentage");
+                if(rs.next())
+                    data +="#"+rs.getInt("fingerprint")+":"+rs.getInt("attendancePercentage");
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception exce) {
+            System.err.println(exce);
+        }
+        Communication.WriteDataToSD(data);
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText("Students Attendance have been uploaded");
+        alert.showAndWait();
     }
     }
 

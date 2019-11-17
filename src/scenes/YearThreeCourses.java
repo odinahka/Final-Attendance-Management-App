@@ -1,6 +1,7 @@
 package scenes;
 
 import DatabaseTransaction.DBconnection;
+import communication.Communication;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -33,7 +34,7 @@ import java.util.function.Predicate;
 /**
  * Created by odinahka on 9/19/2019.
  */
-public class YearThreeCourses {
+public class YearThreeCourses implements ILevels{
 
     Connection conn;
     PreparedStatement ps;
@@ -44,6 +45,13 @@ public class YearThreeCourses {
     Tables table = new Tables();
     Texts texts = new Texts();
     TextField search, fn, ln, on, rn, pc;
+
+    @Override
+    public void UpdateTable(String tableName)
+    {
+        updateAttendance(tableName);
+        refreshTable(tableName);
+    }
 
     public void firstSemester() {
 
@@ -67,8 +75,8 @@ public class YearThreeCourses {
                 "ELE 343 - Electromech Devices and Machines I",
                 "ELE 353 - Power Systems",
                 "ECE 321 - Telecommunication I",
-                "ECE 323 - Electronic Devices and Circuits I",
-                "ECE 332 - Signals Analysis and Systems",
+                "ECE 323 - Electronic Devices and Circuit I",
+                "ECE 332 - Signal Analysis and Systems",
                 "ECE 333 - Digital System Design I",
                 "FEG 303 - Engineering Mathematics III"
         );
@@ -134,14 +142,13 @@ public class YearThreeCourses {
         courses = FXCollections.observableArrayList(
                 "ECE 322 - Telecommunication II",
                 "ECE 326 - Power Electronics",
-                "ELE 344 - Electromech Devices and Machine II",
-                "ECE 328 - Electronic ",
-                "ECE 328 - Electronic Devices and Circuits II",
+                "ELE 344 - Electromech Devices and Machines II",
+                "ECE 328 - Electronic Devices and Circuit II",
                 "ECE 334 - Digital System Design II",
                 "ELE 312 - Circuit Theory III",
                 "ELE 342 - Electrodynamics",
                 "ELE 372 - Instrumentation and Measurement I",
-                "ELE 382 - Feedback and Control Engineering"
+                "ELE 382 - Feedback and Control System"
         );
         listView.setItems(courses);
         listView.setOnKeyPressed(e -> {
@@ -179,6 +186,7 @@ public class YearThreeCourses {
 
         vbox.getChildren().add(listView);
         Scene scene = new Scene(vbox);
+        scene.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
         window.setScene(scene);
         window.initModality(Modality.APPLICATION_MODAL);
         window.show();
@@ -250,12 +258,17 @@ public class YearThreeCourses {
         Menu update = new Menu("Update");
         Menu addStudents = new Menu("Add Students");
         MenuItem updateAttendance = new MenuItem("Update Attendance");
+        updateAttendance.setOnAction( e ->
+        {
+            Communication.UpdateAttendace(databaseName, this);
+        });
         update.getItems().add(updateAttendance);
 
         Menu others, generateReport;
         others = new Menu("Reports");
         generateReport = new Menu("Generate Report");
         MenuItem authenticationReport = new MenuItem("Fingerprint Report");
+        authenticationReport.setOnAction(e -> sendAttendance(databaseName));
         MenuItem printableReport = new MenuItem("Generate Attendance Report (Excel)");
         MenuItem importExcel = new MenuItem("Import Students Details from Excel");
         MenuItem cStudent, oStudent;
@@ -276,8 +289,8 @@ public class YearThreeCourses {
         tableClick(databaseName);
         tableMove(databaseName);
         window.setScene(scene);
-        window.setMinWidth(850);
-        window.setMinHeight(700);
+        window.setMinWidth(900);
+        window.setMinHeight(500);
         window.show();
     }
     void addOStudentScene(String databaseName){
@@ -575,5 +588,88 @@ public class YearThreeCourses {
             //label.setText("SQL error");
             System.err.println(exp);
         }
+    }
+    public void updateAttendance(String table){
+        int [] dataa = Levels.daata;
+        Boolean check = false;
+        int lectureNumber, lecturesAttended, attendancePercentage;
+        lectureNumber = 0;
+        try {
+            String query = "select * from " + table;
+            ps= conn.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                for(int i = 0; i < dataa.length - 1; i++)
+                {
+                    check = false;
+                    if(dataa[i] == rs.getInt("Fingerprint"))
+                    {
+                        lectureNumber = rs.getInt("LectureNumber");
+                        lectureNumber++;
+                        lecturesAttended =rs.getInt("LecturesAttended");
+                        lecturesAttended++;
+                        attendancePercentage = (lecturesAttended /lectureNumber) * 100;
+                        String query1 = "update "+table+" set LectureNumber=?, LecturesAttended=?, AttendancePercentage=? where Fingerprint ='"+dataa[i]+"'";
+                        ps = conn.prepareStatement(query1);
+                        ps.setInt(1, lectureNumber);
+                        ps.setInt(2, lecturesAttended);
+                        ps.setInt(3, attendancePercentage);
+                        ps.execute();
+                        check = true;
+                        break;
+                    }
+                }
+                if(!check)
+                {        lectureNumber = rs.getInt("LectureNumber");
+                    lectureNumber++;
+                    lecturesAttended =rs.getInt("LecturesAttended");
+                    attendancePercentage = (lecturesAttended /lectureNumber) * 100;
+                    String query1 = "update "+table+" set LectureNumber=?, LecturesAttended=?, AttendancePercentage=? where fingerprint ='"+rs.getInt("fingerprint")+"'";
+                    ps = conn.prepareStatement(query1);
+                    ps.setInt(1, lectureNumber);
+                    ps.setInt(2, lecturesAttended);
+                    ps.setInt(3, attendancePercentage);
+                    ps.execute();
+                }
+            }
+            ps.close();
+            rs.close();
+
+
+        } catch (SQLException excc) {
+            System.out.print(excc);
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText("Students Attendance have been updated");
+        alert.showAndWait();
+
+
+    }
+    void sendAttendance(String table) {
+        String data = "";
+        try {
+            String query = "select fingerprint, attendancePercentage from " + table;
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                data += rs.getInt("fingerprint")+":"+rs.getInt("attendancePercentage");
+                if(rs.next())
+                    data +="#"+rs.getInt("fingerprint")+":"+rs.getInt("attendancePercentage");
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception exce) {
+            System.err.println(exce);
+        }
+        Communication.WriteDataToSD(data);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText("Students Attendance have been uploaded");
+        alert.showAndWait();
     }
 }

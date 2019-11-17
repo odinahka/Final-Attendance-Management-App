@@ -3,8 +3,11 @@ package communication;
 import java.io.*;
 import ArduinoAttendanceProject.PortSerialListener;
 import ArduinoAttendanceProject.SerialCommunicator;
+import javafx.application.Platform;
+import scenes.ILevels;
 import scenes.Levels;
 
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -20,6 +23,7 @@ public class Communication {
     private boolean loop = true;
     static SerialCommunicator comm ;
     String rData;
+    public Struct Tables;
 
    // public static ArrayList<String> otherData = new ArrayList<>();
    // public static Levels lvl;
@@ -27,7 +31,17 @@ public class Communication {
     //Registration
     public void getFingerprintID(int ID)
     {
-        comm = new SerialCommunicator();
+        try{
+            comm.ClosePort();
+        }catch(Exception e){}
+
+
+        try{
+            comm = new SerialCommunicator();
+        }catch(Exception ex){
+            System.out.println("Chaeck the device");
+            return;
+        }
         if(!comm.portInitialized){
             System.out.println("Port not initialized");
             return;
@@ -39,11 +53,15 @@ public class Communication {
                 //synchronized (lvl){
                     //lvl.captureCallBack(Integer.parseInt(data));
                 //}
-                //Levels.captureCallBack(Integer.parseInt(data));
-                System.out.println(data);
+
+                Platform.runLater(() -> {
+                    Levels.captureCallBack(Integer.parseInt(data));
+                    System.out.println(data);
+                });
+                    comm.ClosePort();
                 //otherData.add(data);
-                Levels.fingerprint = Integer.parseInt(data);
-                Levels.newDataForRegister = true;
+               /* Levels.fingerprint = Integer.parseInt(data);
+                Levels.newDataForRegister = true;*/
             }
         });
 
@@ -51,8 +69,18 @@ public class Communication {
     }
 
     //Update the database
-   public void UpdateAttendace(){
-        comm = new SerialCommunicator();
+   public static void UpdateAttendace(String tableName, ILevels levels){
+
+       try{
+           comm.ClosePort();
+       }catch(Exception e){}
+
+       try{
+           comm = new SerialCommunicator();
+       }catch(Exception ex){
+           System.out.println("Chaeck the device");
+           return;
+       }
         if(!comm.portInitialized){
             System.out.println("Port not initialized");
             return;
@@ -61,7 +89,11 @@ public class Communication {
         comm.AddListener(new PortSerialListener(){
             @Override
             public void SerialEvent(String data) {
-                dataBuffer = data;
+              //  System.out.print(data);
+                Platform.runLater(() -> {
+                    Levels.updateAttendance(data, tableName, levels);
+                    //System.out.println(data);
+                });
             }
         });
 
@@ -69,8 +101,20 @@ public class Communication {
     }
 
     //Write data to sed card
-   public void WriteDataToSD(String data){
-        comm = new SerialCommunicator();
+   public static void WriteDataToSD(String data){
+
+       try{
+           comm.ClosePort();
+       }catch(Exception e){}
+
+       try{
+           comm = new SerialCommunicator();
+       }catch(Exception ex){
+           System.out.println("Chaeck the device");
+           return;
+       }
+
+
         if(!comm.portInitialized){
             System.out.println("Port not initialized");
 
@@ -79,10 +123,11 @@ public class Communication {
         comm.AddListener(new PortSerialListener(){
             @Override
             public void SerialEvent(String data) {
+                System.out.print(data);
             }
         });
 
-        comm.SendCommand(SerialCommunicator.WRITE_SD,0,data);
+        comm.SendCommand(SerialCommunicator.DELETE_WRITE,0,data);
 
     }
 

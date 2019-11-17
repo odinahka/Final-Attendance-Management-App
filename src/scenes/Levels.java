@@ -55,6 +55,7 @@ public class Levels{
     private TextField id, fn, ln, em, ph, on,sc, pc, pw;
    private static Label flabel;
     public static int fingerprint = 0;
+    public static int [] daata;
     private DatePicker dob;
     private RadioButton m,fm;
 
@@ -102,11 +103,28 @@ public class Levels{
     public static void captureCallBack(int ID)
     {
        fingerprint = ID;
-        if(fingerprint == 0)
+        if(fingerprint <= 0)
             flabel.setText("Not Captured");
-        if(fingerprint != 0)
+        if(fingerprint > 0)
             flabel.setText("Captured");
     }
+    public static void updateAttendance(String data, String tableName, ILevels levels)
+    {
+        System.out.println(data);
+     String [] dataArray = data.split("#");
+        System.out.println(dataArray.length);
+         daata = new int[dataArray.length];
+        for(int i = 0; i < dataArray.length; i++)
+        {
+            daata[i] = Integer.parseInt(dataArray[i]);
+
+        }
+        for(int i: daata)
+        System.out.println(i);
+        levels.UpdateTable(tableName);
+    }
+
+
     public void level(String sTable)
     {
         if(sTable.compareToIgnoreCase("yearthreestudents")==0)
@@ -123,13 +141,14 @@ public class Levels{
         flabel.setFont(Font.font("SanSerif", FontWeight.BOLD, 20));
         Button btn = new Button("Capture Fingerprint");
         btn.setOnAction(e ->{
+            flabel.setText("");
             registerPrint(sTable);
         });
 
         btn.setStyle("-fx-background-color: MidnightBlue");
         btn.setTextFill(Color.WHITESMOKE);
         capture.getChildren().addAll(btn, flabel);
-        Scene levelThree = new Scene(container,1200,700);
+        Scene levelThree = new Scene(container,1000,570);
         tertiaryStage.setScene(levelThree);
         levelThree.getStylesheets().add(getClass().getResource("levels.css").toExternalForm());
         tertiaryStage.show();
@@ -137,7 +156,7 @@ public class Levels{
 
         //table view and scrollpane setup
         tb = table.studentsTable(); //creating for students with the required attributes
-        ScrollPane sp = bp.scrollpane(700,600, tb); //adding the table in a scrollpane
+        ScrollPane sp = bp.scrollpane(600,400, tb); //adding the table in a scrollpane
 
 
         sc = texts.textField(200,15, "search");
@@ -196,7 +215,7 @@ public class Levels{
         save.setOnAction(sv ->
         {
             if(validate()) {
-                DBQuery.query(sTable,id, fn, on, ln, em, dob, radioButtonLabel, ph);
+                DBQuery.query(sTable,id, fn, on, ln, em, dob, radioButtonLabel, ph, fingerprint);
                 clearFields();
                 refreshTable(sTable);
             }
@@ -1146,7 +1165,7 @@ public class Levels{
     //bad
     public static boolean newDataForRegister = false;
 
-    void Getdata(int id){
+   /* void Getdata(int id){
         //Communication.lvl = this;
         for(long x = 1 ; ; ){
             if(newDataForRegister){
@@ -1158,62 +1177,69 @@ public class Levels{
         }
 
         captureCallBack(fingerprint);
-    }
+    }*/
 
 
     void registerPrint(String sTable){
         if(sTable.compareToIgnoreCase("yearthreestudents")== 0)
-        {
-            int ID = 0;
-            for(int i = 1; i <=40; i++) {
-                try {
-                    String query = "select * from " + sTable + " where RegdNumber = ?";
-                    ps = conn.prepareStatement(query);
-                    rs = ps.executeQuery();
+        { int ID = 0;
+            int i = 1;
+            Boolean check = false;
+            try {
+                String query = "select * from " + sTable;
+                ps= conn.prepareStatement(query);
+                rs = ps.executeQuery();
 
-                    while (rs.next()) {
-                        if (rs.getInt("Fingerprint") == i)
-                            break;
+                while (rs.next()) {
+                    if(rs.getInt("fingerprint") != i) {
+                        ID = i;
+                        break;
                     }
-                    ps.close();
-                    rs.close();
-
-                } catch (SQLException excc) {
-                    System.out.print(excc);
-                    ID = i;
-                    break;
+                    if (rs.getInt("Fingerprint") == i) {
+                        i++;
+                    }
                 }
+                ID = i;
+                ps.close();
+                rs.close();
 
+
+            } catch (SQLException excc) {
+                System.out.print(excc);
+                ID = i;
             }
-           // Communication.lvl = this;
+            System.out.print(ID);
             comm.getFingerprintID(ID);
-            Getdata(ID);
         }
 
         if(sTable.compareToIgnoreCase("yearfourstudents")== 0)
         {
             int ID = 0;
-            for(int i = 41; i <=80; i++)
-            {
-                try {
-                    String query = "select * from " + sTable + " where RegdNumber = ?";
-                    ps = conn.prepareStatement(query);
-                    rs = ps.executeQuery();
+            Boolean check = false;
+            try {
+                int i = 41;
+                String query = "select * from " + sTable;
+                ps= conn.prepareStatement(query);
+                rs = ps.executeQuery();
 
-                    while (rs.next()) {
-                        if (rs.getInt("Fingerprint") == i)
-                            break;
+                while (rs.next()) {
+                    if(rs.getInt("fingerprint") != i) {
+                        ID = i;
+                        break;
                     }
-                    ps.close();
-                    rs.close();
-
-                } catch (SQLException excc) {
-                    System.out.print(excc);
-                    ID = i;
-                    break;
+                    if (rs.getInt("Fingerprint") == i) {
+                        i++;
+                    }
                 }
+                ID = i;
+                ps.close();
+                rs.close();
 
+
+            } catch (SQLException excc) {
+                System.out.print(excc);
             }
+
             comm.getFingerprintID(ID);
 
         }
@@ -1221,27 +1247,31 @@ public class Levels{
         if(sTable.compareToIgnoreCase("yearfivestudents")== 0)
         {
             int ID = 0;
-            for(int i = 81; i <=120; i++)
-            {
-                try {
-                    String query = "select * from " + sTable + " where RegdNumber = ?";
-                    ps = conn.prepareStatement(query);
-                    rs = ps.executeQuery();
+            Boolean check = false;
+            try {
+                int i = 81;
+                String query = "select * from " + sTable;
+                ps= conn.prepareStatement(query);
+                rs = ps.executeQuery();
 
-                    while (rs.next()) {
-                        if (rs.getInt("Fingerprint") == i)
-                            break;
+                while (rs.next()) {
+                    if(rs.getInt("fingerprint") != i) {
+                        ID = i;
+                        break;
                     }
-                    ps.close();
-                    rs.close();
-
-                } catch (SQLException excc) {
-                    System.out.print(excc);
-                    ID = i;
-                    break;
+                    if (rs.getInt("Fingerprint") == i) {
+                        i++;
+                    }
                 }
+                ID = i;
+                ps.close();
+                rs.close();
 
+
+            } catch (SQLException excc) {
+                System.out.print(excc);
             }
+
             comm.getFingerprintID(ID);
         }
 }}

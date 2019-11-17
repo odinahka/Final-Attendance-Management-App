@@ -15,14 +15,14 @@ import java.sql.PreparedStatement;
  * Created by odinahka on 9/14/2019.
  */
 public class DBQuery {
-    public static void query(String studentsTable, TextField id, TextField firstName, TextField otherName,TextField lastName, TextField email, DatePicker date, String radioButtonLabel, TextField phoneNo )
+    public static void query(String studentsTable, TextField id, TextField firstName, TextField otherName,TextField lastName, TextField email, DatePicker date, String radioButtonLabel, TextField phoneNo, int fingerprint )
     {
         PreparedStatement ps;
         Connection conn = DBconnection.Dbconnect(); // checkConnection();;
 
         if(studentsTable.compareToIgnoreCase("yearthreestudents") == 0) {
             try {
-                String query = "INSERT INTO " + studentsTable + " (RegdNumber, FirstName, OtherName, LastName, Email, DOB, Gender, PhoneNumber) VALUES (?,?,?,?,?,?,?,?)";
+                String query = "INSERT INTO " + studentsTable + " (RegdNumber, FirstName, OtherName, LastName, Email, DOB, Gender, PhoneNumber, Fingerprint) VALUES (?,?,?,?,?,?,?,?,?)";
                 ps = conn.prepareStatement(query);
                 ps.setString(1, id.getText());
                 ps.setString(2, firstName.getText());
@@ -32,6 +32,7 @@ public class DBQuery {
                 ps.setString(6, ((TextField) date.getEditor()).getText());
                 ps.setString(7, radioButtonLabel);
                 ps.setString(8, phoneNo.getText());
+                ps.setInt(9,fingerprint);
                 ps.execute();
 
                 for(int i = 1; i <= 18; i++) {
@@ -72,7 +73,7 @@ public class DBQuery {
                         course = "PowerElectronics";
                     if(i==18)
                         course = "DigitalSystemDesignII";
-                    String query2 = "INSERT INTO " + course + " (RegdNumber, FirstName, OtherName, LastName, LectureNumber, LecturesAttended, AttendancePercentage ) VALUES (?,?,?,?,?,?,?)";
+                    String query2 = "INSERT INTO " + course + " (RegdNumber, FirstName, OtherName, LastName, LectureNumber, LecturesAttended, AttendancePercentage, fingerprint ) VALUES (?,?,?,?,?,?,?,?)";
                     ps = conn.prepareStatement(query2);
                     ps.setString(1, id.getText());
                     ps.setString(2, firstName.getText());
@@ -81,6 +82,7 @@ public class DBQuery {
                     ps.setInt(5,0);
                     ps.setInt(6,0);
                     ps.setInt(7,0);
+                    ps.setInt(8,fingerprint);
                     ps.execute();
                 }
 
@@ -99,7 +101,7 @@ public class DBQuery {
 
         if(studentsTable.compareToIgnoreCase("yearfourstudents") == 0) {
             try {
-                String query = "INSERT INTO " + studentsTable + " (RegdNumber, FirstName, OtherName, LastName, Email, DOB, Gender, PhoneNumber) VALUES (?,?,?,?,?,?,?,?)";
+                String query = "INSERT INTO " + studentsTable + " (RegdNumber, FirstName, OtherName, LastName, Email, DOB, Gender, PhoneNumber, fingerprint) VALUES (?,?,?,?,?,?,?,?,?)";
                 ps = conn.prepareStatement(query);
                 ps.setString(1, id.getText());
                 ps.setString(2, firstName.getText());
@@ -109,6 +111,7 @@ public class DBQuery {
                 ps.setString(6, ((TextField) date.getEditor()).getText());
                 ps.setString(7, radioButtonLabel);
                 ps.setString(8, phoneNo.getText());
+                ps.setInt(9, fingerprint);
                 ps.execute();
 
                 for(int i = 1; i <= 8; i++) {
@@ -129,7 +132,7 @@ public class DBQuery {
                         course = "AdvancedCircuitTechniques";
                     if(i==8)
                         course = "FundamentalOfDigitalCommunications";
-                    String query2 = "INSERT INTO " + course + " (RegdNumber, FirstName, OtherName, LastName, LectureNumber, LecturesAttended, AttendancePercentage ) VALUES (?,?,?,?,?,?,?)";
+                    String query2 = "INSERT INTO " + course + " (RegdNumber, FirstName, OtherName, LastName, LectureNumber, LecturesAttended, AttendancePercentage, fingerprint ) VALUES (?,?,?,?,?,?,?,?)";
                     ps = conn.prepareStatement(query2);
                     ps.setString(1, id.getText());
                     ps.setString(2, firstName.getText());
@@ -138,6 +141,7 @@ public class DBQuery {
                     ps.setInt(5,0);
                     ps.setInt(6,0);
                     ps.setInt(7,0);
+                    ps.setInt(8,fingerprint);
                     ps.execute();
                 }
 
@@ -156,7 +160,7 @@ public class DBQuery {
 
         if(studentsTable.compareToIgnoreCase("yearfivestudents") == 0) {
             try {
-                String query = "INSERT INTO " + studentsTable + " (RegdNumber, FirstName, OtherName, LastName, Email, DOB, Gender, PhoneNumber) VALUES (?,?,?,?,?,?,?,?)";
+                String query = "INSERT INTO " + studentsTable + " (RegdNumber, FirstName, OtherName, LastName, Email, DOB, Gender, PhoneNumber, fingerprint) VALUES (?,?,?,?,?,?,?,?,?)";
                 ps = conn.prepareStatement(query);
                 ps.setString(1, id.getText());
                 ps.setString(2, firstName.getText());
@@ -166,6 +170,7 @@ public class DBQuery {
                 ps.setString(6, ((TextField) date.getEditor()).getText());
                 ps.setString(7, radioButtonLabel);
                 ps.setString(8, phoneNo.getText());
+                ps.setInt(9,fingerprint);
                 ps.execute();
 
                 for(int i = 1; i <= 15; i++) {
@@ -200,7 +205,7 @@ public class DBQuery {
                         course = "TVSatelliteAndRadarSystem";
                     if(i==15)
                         course = "OpticFibreCommunication";
-                    String query2 = "INSERT INTO " + course + " (RegdNumber, FirstName, OtherName, LastName, LectureNumber, LecturesAttended, AttendancePercentage ) VALUES (?,?,?,?,?,?,?)";
+                    String query2 = "INSERT INTO " + course + " (RegdNumber, FirstName, OtherName, LastName, LectureNumber, LecturesAttended, AttendancePercentage, fingerprint ) VALUES (?,?,?,?,?,?,?,?)";
                     ps = conn.prepareStatement(query2);
                     ps.setString(1, id.getText());
                     ps.setString(2, firstName.getText());
@@ -209,6 +214,7 @@ public class DBQuery {
                     ps.setInt(5,0);
                     ps.setInt(6,0);
                     ps.setInt(7,0);
+                    ps.setInt(8,fingerprint);
                     ps.execute();
                 }
 

@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Final Attendance Management App:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Final_Attendance_Management_App_jar</output-path>
+    <root id="archive" name="Final Attendance Management App.jar">
+      <element id="module-output" name="Final Attendance Management App" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../new FX/sqlite-jdbc-3.27.2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-4.1.0/poi-4.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../New folder (2)/ArduinoAttendanceProject.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-4.1.0/xmlbeans-3.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../New folder (2)/jSerialComm-2.5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-4.1.0/poi-ooxml-schemas-4.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-4.1.0/poi-ooxml-4.1.0.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/Unizik.png" />
+      <element id="file-copy" path="$PROJECT_DIR$/AttendanceDatabase.sqlite" />
+      <element id="file-copy" path="$PROJECT_DIR$/Unizik.ico" />
+    </root>
+  </artifact>
+</component>

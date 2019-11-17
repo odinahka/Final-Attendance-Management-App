@@ -60,7 +60,7 @@ public class Main extends Application {
         //scene1.getStylesheets().add(getClass().getResource("StyleSheet.css").toExternalForm());
     }
 
-
+    //This method is for the admin login
     @Override
     public void start(Stage primaryStage) throws Exception{
 
